@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.py[cod]
+results/*
+!results/responses/
+!results/metrics/
+!results/plots/
+results/responses/*
+!results/responses/.gitkeep
+results/metrics/*
+!results/metrics/.gitkeep
+results/plots/*
+!results/plots/.gitkeep

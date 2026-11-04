@@ -60,16 +60,43 @@ tema,metodo,modelo,exact_match,rougeL,bertscore
 - Docstrings
 - PEP8
 
-## Estrutura pretendida
+## Estrutura implementada
 
-src/
-
-dataset/
-inference/
-evaluation/
-visualization/
-utils/
+```text
+llm-evaluation/
+├── config.py
+├── main.py
+├── data/
+├── results/
+│   ├── responses/
+│   ├── metrics/
+│   └── plots/
+├── src/
+│   ├── dataset/
+│   ├── inference/
+│   ├── evaluation/
+│   ├── analysis/
+│   ├── visualization/
+│   └── utils/
+├── scripts/
+└── tests/
+```
 
 ## Futuro
 
 O projeto deverá ser facilmente extensível para Meta 3 (RAG).
+
+## Implementação Meta 2
+
+- Entrada: `data/dataset_PLN_test.tsv` por omissão; o carregador também aceita CSV e
+  ignora colunas adicionais como `Autor`.
+- Execução: `python main.py run`, ou os quatro scripts independentes em
+  `scripts/`.
+- Tags Ollama verificadas neste ambiente: `teex/amalia:q4_K_M` e
+  `llama3.1:8b` (Q4_K_M).
+- Saídas em `results/`: respostas, métricas por pergunta, médias globais/por
+  tema/por método, três gráficos e metadados para reprodutibilidade.
+- BERTScore usa `xlm-roberta-base` multilingue. Exact Match é uma comparação
+  literal, sem normalização de maiúsculas, pontuação ou espaços.
+- A geração implementa uma interface com contexto opcional para reutilização
+  na futura Meta 3 (RAG).
