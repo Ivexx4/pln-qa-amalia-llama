@@ -1,0 +1,75 @@
+% ===============================================================================
+% Relatório de PLN — estrutura comum às várias metas
+% Para compilar outra meta, alterar o valor de \metaSelecionada.
+% ===============================================================================
+
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\input{LaTexPackages}
+\usepackage{csquotes}
+
+% Alterar este valor para selecionar a meta a compilar.
+\providecommand{\metaSelecionada}{2}
+
+% Dados comuns
+\def\name{Ivo Rosa}
+\def\university{Universidade de Coimbra}
+\def\coursecode{Processamento de Linguagem Natural}
+\def\semnum{1}
+\def\stunum{2024209219}
+
+% Dados e bibliografia específicos da meta
+\ifnum\metaSelecionada=1
+    \def\atitle{Meta 1}
+    \def\subdate{8/10/2026}
+    \addbibresource{meta1/References.bib}
+\else
+    \ifnum\metaSelecionada=2
+        \def\atitle{Meta 2 -- Classificação de perguntas por tema}
+        \def\subdate{4/11/2026}
+        \addbibresource{meta2/References.bib}
+    \else
+        \PackageError{relatorio}
+            {Meta \metaSelecionada nao configurada}
+            {Escolhe 1 ou 2, ou configura uma nova meta.}
+    \fi
+\fi
+
+\topmargin=-0.4in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.4in
+\textheight=9.2in
+\setlength{\bibitemsep}{0pt}
+\AtBeginBibliography{\small\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\begin{document}
+
+\begin{titlepage}
+    \color{Fuchsia}
+    \begin{center}
+        \includegraphics[width=12cm]{meta1/FCTUC.png}\\[5em]
+        \Huge{\coursecode\\[.7em] \atitle}\\[6em]
+        \color{black}
+        \textbf{\subdate}\\[6em]
+        \Large{por \name}\\
+        \Large{Número de Estudante: \stunum}\\[3em]
+    \end{center}
+\end{titlepage}
+\thispagestyle{empty}
+\setcounter{page}{1}
+
+\newpage
+\color{black}
+
+\ifnum\metaSelecionada=1
+    \input{meta1/main}
+\else
+    \input{meta2/main}
+\fi
+
+\begingroup\footnotesize\printbibliography[title={Referências}]\endgroup
+
+\end{document}

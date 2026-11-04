@@ -1,0 +1,36 @@
+\section{Criação do Conjunto de Dados}
+\label{sec:criacao_dados}
+
+Ocorpus abrange diferentes subdomínios da Cibersegurança, incluindo segurança da informação e sistemas de Inteligência Artificial. O conjunto final é constituído por 22 pares pergunta-resposta, dos quais 12 foram elaborados manualmente e 10 gerados automaticamente. Cada registo inclui o tema, a pergunta, o método de geração (HUM ou LLM) e a respetiva resposta validada
+
+\subsection{ Geração manual}
+Foram criadas manualmente 12 perguntas sobre diferentes tópicos da Cibersegurança.
+
+\subsection{Geração Automática}
+\label{sec:geracao_automatica}
+A geração automática foi realizada com o modelo AMALIA q4\_K\_M, disponibilizado através da plataforma Ollama \cite{amalia_ollama}.
+O prompt foi executado seis vezes  para aumentar a diversidade das perguntas geradas.
+
+\textit{prompt} utilizado
+
+\begin{quote}
+\small
+Gera uma lista de perguntas factuais em português sobre o tema Cibersegurança,
+combinando conceitos clássicos de segurança da informação (criptografia,
+protocolos de rede, controlo de acessos) e segurança em sistemas de Inteligência
+Artificial (vulnerabilidades em LLMs, ataques a modelos).
+
+Cada pergunta deve ser direta, clara, autossuficiente e ter uma resposta curta e
+inequívoca, formulada no máximo numa frase. Evita perguntas ambíguas, demasiado
+abertas ou que exijam explicações longas.
+
+Não repitas perguntas nem o mesmo conceito de forma redundante. Procura abranger diferentes áreas da cibersegurança.
+
+Apresenta cada resultado exatamente no seguinte formato:
+
+Pergunta: [pergunta]
+
+Resposta: [resposta curta]
+\end{quote}
+
+
