@@ -9,6 +9,7 @@
 \usepackage[portuguese]{babel}
 \input{LaTexPackages}
 \usepackage{csquotes}
+\addbibresource{References.bib}
 
 % Alterar este valor para selecionar a meta a compilar.
 \providecommand{\metaSelecionada}{2}
@@ -24,12 +25,10 @@
 \ifnum\metaSelecionada=1
     \def\atitle{Meta 1}
     \def\subdate{8/10/2026}
-    \addbibresource{meta1/References.bib}
 \else
     \ifnum\metaSelecionada=2
-        \def\atitle{Meta 2 -- Classificação de perguntas por tema}
-        \def\subdate{4/11/2026}
-        \addbibresource{meta2/References.bib}
+        \def\atitle{Meta 2 -- Resposta a Perguntas}
+        \def\subdate{5/11/2026}
     \else
         \PackageError{relatorio}
             {Meta \metaSelecionada nao configurada}
@@ -50,7 +49,7 @@
 \begin{titlepage}
     \color{Fuchsia}
     \begin{center}
-        \includegraphics[width=12cm]{meta1/FCTUC.png}\\[5em]
+        \includegraphics[width=12cm]{FCTUC.png}\\[5em]
         \Huge{\coursecode\\[.7em] \atitle}\\[6em]
         \color{black}
         \textbf{\subdate}\\[6em]

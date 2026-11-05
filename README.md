@@ -1,105 +1,51 @@
-# LLM Evaluation — Meta 2
+# PLN 2026/2027 – Meta 2 (Resposta a Perguntas)
 
-Pipeline de Question Answering para comparar AMALIA e Llama 3.1 8B Instruct,
-executados localmente através do Ollama. A estrutura separa carregamento dos
-dados, inferência, avaliação, análise e visualização; a interface do cliente
-aceita contexto opcional para ser reutilizada na Meta 3 (RAG).
+## Preparação
+```bash
+pip install -r requirements.txt
+ollama pull teex/amalia:q4_K_M
+ollama pull llama3.1:8b
+ollama pull qwen2.5:7b        # juiz (LLM-as-Judge)
+```
+Coloca `dataset_PLN_train.tsv` e `dataset_PLN_test.tsv` na pasta onde corres `main.py` (ou usa `--train`/`--test`).
 
-## Estrutura
+## Execução
+```bash
+python main.py generate --limit 5   # teste rápido
+python main.py all                  # pipeline completo (~453 perguntas x 2 LLMs)
+```
+Fases separadas: `generate`, `judge`, `score`, `analyze` (cache em `results/`, retoma se interrompido).
+Opções: `--models`, `--judge-model`, `--bert-model`, `--split both|train|test`, `--train`, `--test`, `--limit`.
 
-```text
-llm-evaluation/
-├── README.md
-├── requirements.txt
-├── config.py
-├── main.py
-├── data/
-│   ├── dataset_PLN_train.tsv
-│   └── dataset_PLN_test.tsv
-├── results/
-│   ├── responses/
-│   ├── metrics/
-│   └── plots/
-├── src/
-│   ├── dataset/       # schema e carregamento CSV/TSV
-│   ├── inference/     # prompts, Ollama e geração
-│   ├── evaluation/    # Exact Match, ROUGE-L e BERTScore
-│   ├── analysis/      # agregações globais, por tema e por método
-│   ├── visualization/ # gráficos Matplotlib
-│   └── utils/         # logging e I/O
-├── scripts/           # comandos para cada etapa
-└── tests/
+## Estrutura do código
+```
+main.py                  ponto de entrada
+qa_pipeline/
+  config.py              caminhos, modelos por omissão, parâmetros de decodificação
+  prompts.py             prompts de geração e do juiz
+  data.py                leitura e limpeza dos TSV
+  llm.py                 cliente Ollama
+  cache.py               cache JSONL (retoma execuções)
+  generation.py          fase 1: respostas dos LLMs
+  judge.py               fase 2: LLM-as-Judge
+  metrics.py             EM, Contains, ROUGE-L
+  scoring.py             junta tudo + BERTScore -> all_results.csv
+  analysis.py            tabelas, gráficos e ficheiros de erros
+  cli.py                 argumentos e orquestração das fases
 ```
 
-## Instalação
+## Decisões tomadas
+- Modelos: AMALIA (q4_K_M) e Llama 3.1 8B (cabem em 8 GB de VRAM); juiz: Qwen 2.5 7B (modelo distinto dos avaliados).
+- Dados: treino + teste juntos (453 perguntas), pois não há treino de modelos.
+- Métricas: Exact Match (+ "Contains"), ROUGE-L (implementação própria, sem perder acentos), BERTScore (bert-base-multilingual-cased) e LLM-as-Judge.
+- Decodificação determinística (temperature 0, seed 42), respostas curtas via prompt de sistema.
+- Limpeza: artefactos `_x0096_`/`_x0080_` corrigidos; datas `YYYY-MM-DD 00:00:00` convertidas para "D de mês de AAAA".
 
-Requer Python 3.11+, Ollama e os modelos disponíveis localmente:
+## Saídas (`results/`)
+`all_results.csv`, `tabela_por_{modelo,tema,metodo}.csv` (metodo = autor da pergunta, HUM vs LLM), gráficos `fig_*.png`,
+`erros_juiz.csv`, `juiz_certo_metrica_lexical_baixa.csv`.
 
-```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-ollama list
-```
-
-Os nomes de modelo predefinidos (`teex/amalia:q4_K_M` e `llama3.1:8b`) foram
-verificados neste projeto. Se as tags diferirem na instalação local, passa
-outras tags em `--amalia-model` e `--llama-model`.
-
-## Executar
-
-O comando completo usa o conjunto de teste por omissão:
-
-```powershell
-.\.venv\Scripts\python.exe main.py run
-```
-
-Para validar a instalação com três perguntas antes da execução completa:
-
-```powershell
-.\.venv\Scripts\python.exe main.py run --limit 3 --device cpu
-```
-
-Cada etapa também pode ser executada em separado:
-
-```powershell
-.\.venv\Scripts\python.exe scripts\01_generate_responses.py
-.\.venv\Scripts\python.exe scripts\02_evaluate_models.py --device auto
-.\.venv\Scripts\python.exe scripts\03_generate_analysis.py
-.\.venv\Scripts\python.exe scripts\04_generate_plots.py
-```
-
-O diretório de entrada por omissão é `data/`. São suportados CSV e TSV, os
-cabeçalhos portugueses da Meta 1 e colunas adicionais como `Autor`.
-BERTScore utiliza o modelo multilingue `xlm-roberta-base`, adequado para
-português. A primeira avaliação descarrega os pesos do Hugging Face. `--device
-auto` usa CUDA quando disponível; use `--device cpu` ou um batch menor se faltar
-memória na GPU. A versão de PyTorch instalada deve suportar CUDA para aproveitar
-a RTX 4060.
-
-## Resultados
-
-Os ficheiros são colocados em:
-
-- `results/responses/responses.csv`: pergunta, ground truth e respostas dos dois
-  modelos; atualizado à medida que a inferência avança.
-- `results/metrics/metrics.csv`: métricas por pergunta e modelo.
-- `results/metrics/summary_global.csv`, `summary_tema.csv` e
-  `summary_metodo.csv`: médias e contagem de exemplos por grupo.
-- `results/plots/`: gráficos global, por tema e HUM vs LLM.
-- `results/responses/run_metadata.json`: hash do dataset, tags e parâmetros de
-  geração para ajudar a reproduzir a experiência.
-
-Métricas: Exact Match literal, ROUGE-L F-measure sem stemming e BERTScore F1
-sem reescalamento por baseline. Exact Match é sensível a diferenças de
-maiúsculas, pontuação e espaços; interpreta-a em conjunto com as métricas
-semânticas.
-
-Para a Meta 3, implemente `AnswerGenerator.generate(question, context=None)` em
-`src/inference/ollama_client.py` ou acrescente um cliente RAG que satisfaça a
-mesma interface. O carregamento, a avaliação e a produção de relatórios podem
-ser reutilizados.
-
-## Testes
-
-```powershell
-.\.venv\Scripts\python.exe -m unittest discover -s tests -v
-```
+## Cuidados
+- Algumas respostas de referência são discutíveis ou datadas (ex.: "país com maior taxa de sobrevivência ao cancro", campeões 2025/26); referir na análise de erros.
+- Por tema, o número de perguntas é pequeno (cerca de 20 em média): interpretar com cautela.
+- O LLM-as-Judge também erra: valida manualmente uma amostra (ex.: 30 casos) e reporta a concordância.

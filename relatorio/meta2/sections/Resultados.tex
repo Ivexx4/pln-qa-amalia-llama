@@ -1,0 +1,19 @@
+\section{Resultados}
+
+AMALIA obteve médias superiores às de Llama nas cinco métricas (Tabela~\ref{tab:resultados-globais}). O juiz classificou como corretas 68,4\% das respostas de AMALIA e 60,7\% das de Llama; EM foi 13,0\% e 4,6\%. A diferença entre EM e as métricas semânticas reflete, em parte, respostas válidas com formulações diferentes.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{lrrrrr}
+\toprule
+Modelo & EM & Contains & ROUGE-L & BERTScore & Juiz \\
+\midrule
+AMALIA & 0,130 & 0,415 & 0,335 & 0,743 & 0,684 \\
+Llama 3.1 8B & 0,046 & 0,360 & 0,259 & 0,721 & 0,607 \\
+\bottomrule
+\end{tabular}
+\caption{Médias globais (453 perguntas por modelo).}
+\label{tab:resultados-globais}
+\end{table}
+
+Por origem, o juiz deu a AMALIA 66,1\% em HUM e 70,9\% em LLM; a Llama, 58,3\% e 63,2\%. São diferenças observadas, não evidência de causalidade. Por tema, AMALIA atingiu 100\% em Mitologia Grega e Motorizações e Energia Automóvel (20 perguntas em cada), mas 27,8\% em Jogos Olímpicos (18). Os mínimos de Llama foram 30\% em Basquetebol e Tradições Académicas de Coimbra (20 cada). Com apenas 18–20 perguntas por tema, estas médias são indicativas.
