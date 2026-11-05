@@ -35,11 +35,18 @@ class LLMRetryTests(unittest.TestCase):
     def test_retries_timeout_then_returns_response(self, post, sleep):
         response = Mock()
         response.json.return_value = {"message": {"content": "Lisboa"}}
-        post.side_effect = [requests.Timeout("temporary"), response]
+        post.side_effect = [
+            requests.Timeout("temporary"),
+            requests.Timeout("temporary"),
+            response,
+        ]
 
         self.assertEqual(llm.chat("model", []), "Lisboa")
-        self.assertEqual(post.call_count, 2)
-        sleep.assert_called_once_with(1)
+        self.assertEqual(post.call_count, 3)
+        self.assertEqual(
+            [call.args[0] for call in sleep.call_args_list],
+            [1, 2],
+        )
 
     @patch("qa_pipeline.llm.time.sleep")
     @patch("qa_pipeline.llm.requests.post")

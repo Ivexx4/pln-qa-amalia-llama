@@ -57,6 +57,6 @@ def chat(model: str, messages: list, max_tokens: int = config.GEN_MAX_TOKENS) ->
                 config.HTTP_MAX_ATTEMPTS,
             )
 
-        time.sleep(config.HTTP_RETRY_BACKOFF_SECONDS * attempt)
+        time.sleep(config.HTTP_RETRY_BACKOFF_SECONDS * 2 ** (attempt - 1))
 
     raise RuntimeError("A chamada ao Ollama terminou sem resposta.")
