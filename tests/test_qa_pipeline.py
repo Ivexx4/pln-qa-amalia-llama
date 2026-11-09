@@ -20,7 +20,8 @@ class ParseVerdictTests(unittest.TestCase):
     def test_rejects_prose_and_malformed_json(self):
         for text in (
             "A resposta está correta",
-            "Não é incorreto",
+            "A resposta não está incorreta",
+            "Não está totalmente correto",
             '{"veredito": "CORRETO", "explicacao": "texto"}',
             '{"veredito": "talvez"}',
             "```json\n{\"veredito\": \"CORRETO\"}\n```",

@@ -1,7 +1,8 @@
-\section{Erros, Limitações e Conclusão}
+\section{Erros e Limitações}
 
 O juiz marcou 321 respostas como incorretas; em 288 casos marcou a resposta correta apesar de EM=0 e ROUGE-L$<0,3$. Por exemplo, para «Quais os dois únicos mamíferos que põem ovos?», AMALIA respondeu «As equidnas e os ornitorrincos», semanticamente equivalente à referência, embora lexicalmente diferente. Llama respondeu «baleia-azul e baleia-índia», erro assinalado pelo juiz. Os exemplos ilustram a complementaridade das métricas, mas não validam o próprio juiz.
 
-As referências podem ser ambíguas, discutíveis ou sensíveis à data; o juiz de 7B também pode errar. Os resultados disponíveis não registam uma validação humana sistemática dos vereditos, pelo que a métrica \textit{Judge} não deve ser interpretada como verdade absoluta. As métricas lexicais são sensíveis à forma e BERTScore pode confundir semelhança textual com equivalência factual. A execução determinística facilita a reprodução, mas os resultados dependem das versões dos modelos e do conjunto usados.
-
-Globalmente, AMALIA apresentou melhor desempenho nesta experiência, embora a variação temática e as limitações de avaliação recomendem cautela. Como continuação, importa rever referências discutíveis e validar manualmente uma amostra estratificada dos vereditos, reportando concordância. O pipeline usou Qwen 2.5 7B como juiz; este texto foi preparado com assistência de GitHub Copilot. Para a declaração exigida de ferramentas e prompts usados na programação, os autores devem acrescentar os prompts efetivamente usados no desenvolvimento, além dos prompts de execução registados no código.
+As referências podem ser ambíguas, discutíveis ou sensíveis à data; o juiz de 7B também pode errar. Os resultados disponíveis não registam uma validação humana sistemática dos vereditos, pelo que a métrica \textit{Judge} não deve ser interpretada como verdade absoluta.
+Numa análise manual exploratória das primeiras 30 entradas de \path{juiz_certo_metrica_lexical_baixa.csv}, 27 (90\%) foram consideradas equivalências semânticas válidas que o juiz identificou apesar da penalização por EM e ROUGE-L; esta amostra não aleatória não substitui uma validação sistemática.
+As métricas lexicais são sensíveis à forma e BERTScore pode confundir semelhança textual com equivalência factual.
+A execução determinística facilita a reprodução, mas os resultados dependem das versões dos modelos e do conjunto usados.
