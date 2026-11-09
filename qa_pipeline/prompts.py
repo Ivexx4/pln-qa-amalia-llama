@@ -5,6 +5,12 @@ SYSTEM_PROMPT = (
     "Responde apenas com uma resposta curta (no máximo uma frase), sem explicações adicionais."
 )
 
+RAG_SYSTEM_PROMPT = (
+    "És um assistente que responde a perguntas de cultura geral em português europeu. "
+    "Usa o contexto relevante fornecido para fundamentar a resposta, mas mantém a resposta curta "
+    "(no máximo uma frase) e sem explicações extras."
+)
+
 JUDGE_PROMPT = """Avalia se a resposta candidata está correta face à resposta de referência.
 
 Pergunta: {q}

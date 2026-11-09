@@ -13,9 +13,15 @@ Coloca `dataset_PLN_train.tsv` e `dataset_PLN_test.tsv` na pasta onde corres `ma
 ```bash
 python main.py generate --limit 5   # teste rápido
 python main.py all                  # pipeline completo (~453 perguntas x 2 LLMs)
+python main.py generate --rag --rag-top-k 3 --limit 3
 ```
 Fases separadas: `generate`, `judge`, `score`, `analyze` (cache em `results/`, retoma se interrompido).
-Opções: `--models`, `--judge-model`, `--bert-model`, `--split both|train|test`, `--train`, `--test`, `--limit`.
+Opções: `--models`, `--judge-model`, `--bert-model`, `--split both|train|test`, `--train`, `--test`, `--limit`, `--rag`, `--rag-top-k`.
+
+## Meta 3: Geração aumentada por recuperação (RAG)
+- Adiciona recuperação de contexto lexical a partir do conjunto de perguntas/respostas disponíveis.
+- O gerador usa os K itens mais semelhantes para incluir contexto no prompt sem perder a resposta curta exigida.
+- A opção `--rag` ativa esta variante e `--rag-top-k` controla quantos documentos recuperar.
 
 ## Estrutura do código
 ```
