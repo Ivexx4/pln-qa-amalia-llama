@@ -4,10 +4,10 @@ import unicodedata
 
 
 def tokens(s: str) -> list:
-    """Minúsculas, sem acentos nem pontuação."""
+    """Minúsculas, sem acentos nem pontuação, preservando letras e dígitos Unicode."""
     s = unicodedata.normalize("NFKD", s.lower())
     s = "".join(c for c in s if not unicodedata.combining(c))
-    return re.sub(r"[^a-z0-9\s]", " ", s).split()
+    return re.sub(r"[^\w\s]", " ", s).split()
 
 
 def lcs(a: list, b: list) -> int:
@@ -33,7 +33,11 @@ def rouge_l(pred: str, gold: str) -> float:
 
 
 def exact_match(pred: str, gold: str) -> int:
-    return int(tokens(pred) == tokens(gold))
+    """1 apenas se as sequências de tokens coincidirem e a referência tiver tokens."""
+    g = tokens(gold)
+    if not g:
+        return 0
+    return int(tokens(pred) == g)
 
 
 def contains(pred: str, gold: str) -> int:

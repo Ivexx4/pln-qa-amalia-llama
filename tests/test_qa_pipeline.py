@@ -197,6 +197,21 @@ class MetricAndAnalysisTests(unittest.TestCase):
         self.assertEqual(metrics.contains("Lisboeta", "Lisboa"), 0)
         self.assertAlmostEqual(metrics.rouge_l("um dois três", "um três"), 0.8)
 
+    def test_empty_gold_never_matches(self):
+        self.assertEqual(metrics.exact_match("", ""), 0)
+        self.assertEqual(metrics.exact_match("!!!", "???"), 0)
+        self.assertEqual(metrics.exact_match("Lisboa", ""), 0)
+        self.assertEqual(metrics.exact_match("中国", "日本"), 0)
+
+    def test_tokens_keep_non_latin_letters(self):
+        self.assertEqual(metrics.tokens("Αθήνα"), ["αθηνα"])
+        self.assertEqual(metrics.exact_match("Αθήνα", "ΑΘΗΝΑ"), 1)
+        self.assertEqual(metrics.tokens("Москва"), ["москва"])
+
+    def test_exact_match_is_stricter_than_contains(self):
+        self.assertEqual(metrics.exact_match("O Tejo", "Tejo"), 0)
+        self.assertEqual(metrics.contains("O Tejo", "Tejo"), 1)
+
     def test_paired_analysis_excludes_incomplete_metric_pairs(self):
         base = {"Pergunta": "Q", "Gold": "R", "Tema": "T", "Metodo": "HUM", "Autor": "A",
                 "split": "test", "EM": 1, "Contains": 1, "ROUGE_L": 1, "BERTScore_F1": 1}
