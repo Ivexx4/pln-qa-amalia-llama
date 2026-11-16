@@ -1,13 +1,19 @@
+# Ambiente local e ficheiros das ferramentas
+.idea/
 .venv/
 __pycache__/
 *.py[cod]
-results/*
-!results/responses/
-!results/metrics/
-!results/plots/
-results/responses/*
-!results/responses/.gitkeep
-results/metrics/*
-!results/metrics/.gitkeep
-results/plots/*
-!results/plots/.gitkeep
+
+# Resultados: versionar apenas manifestos, tabelas e o detalhe por resposta.
+# As restantes saídas (caches JSONL, figuras) ficam fora do repositório.
+results/**
+!results/**/
+!results/meta2/**/manifest.json
+!results/meta2/**/all_results.csv
+!results/meta2/**/tabela_*.csv
+
+# Caches de previsões/vereditos e eventuais modelos
+results/**/*.jsonl
+models/
+*.gguf
+*.safetensors

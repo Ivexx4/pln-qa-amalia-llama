@@ -1,0 +1,47 @@
+Tema,Modelo,n_respostas,EM,Contains,ROUGE_L,BERTScore_F1,Judge,n_EM,n_Contains,n_ROUGE_L,n_BERTScore_F1,n_Judge
+Animais,llama3.1:8b,18,0.056,0.056,0.561,0.856,0.444,18,18,18,18,18
+Animais,teex/amalia:q4_K_M,18,0.0,0.056,0.488,0.838,0.444,18,18,18,18,18
+Basquetebol,llama3.1:8b,20,0.0,0.25,0.104,0.652,0.3,20,20,20,20,20
+Basquetebol,teex/amalia:q4_K_M,20,0.05,0.2,0.158,0.666,0.3,20,20,20,20,20
+Cibersegurança,llama3.1:8b,20,0.1,0.25,0.245,0.741,0.75,20,20,20,20,20
+Cibersegurança,teex/amalia:q4_K_M,20,0.15,0.25,0.423,0.78,0.95,20,20,20,20,20
+Cinema,llama3.1:8b,20,0.1,0.3,0.237,0.703,0.5,20,20,20,20,20
+Cinema,teex/amalia:q4_K_M,20,0.15,0.4,0.267,0.717,0.6,20,20,20,20,20
+Corpo Humano e Anatomia,llama3.1:8b,20,0.0,0.25,0.17,0.706,0.6,20,20,20,20,20
+Corpo Humano e Anatomia,teex/amalia:q4_K_M,20,0.15,0.6,0.429,0.779,0.8,20,20,20,20,20
+F1,llama3.1:8b,18,0.0,0.556,0.27,0.701,0.778,18,18,18,18,18
+F1,teex/amalia:q4_K_M,18,0.111,0.556,0.258,0.694,0.722,18,18,18,18,18
+Filosofia,llama3.1:8b,20,0.05,0.6,0.369,0.751,0.75,20,20,20,20,20
+Filosofia,teex/amalia:q4_K_M,20,0.15,0.7,0.402,0.757,0.9,20,20,20,20,20
+Futebol,llama3.1:8b,20,0.1,0.5,0.278,0.709,0.6,20,20,20,20,20
+Futebol,teex/amalia:q4_K_M,20,0.2,0.4,0.315,0.719,0.55,20,20,20,20,20
+Gastronomia,llama3.1:8b,20,0.15,0.3,0.268,0.716,0.4,20,20,20,20,20
+Gastronomia,teex/amalia:q4_K_M,20,0.1,0.3,0.268,0.749,0.55,20,20,20,20,20
+Geografia de Portugal,llama3.1:8b,20,0.1,0.4,0.401,0.781,0.7,20,20,20,20,20
+Geografia de Portugal,teex/amalia:q4_K_M,20,0.2,0.35,0.442,0.801,0.6,20,20,20,20,20
+Geografia do Brasil,llama3.1:8b,20,0.1,0.55,0.293,0.712,0.75,20,20,20,20,20
+Geografia do Brasil,teex/amalia:q4_K_M,20,0.2,0.55,0.372,0.728,0.8,20,20,20,20,20
+História de Portugal,llama3.1:8b,20,0.1,0.55,0.404,0.77,0.7,20,20,20,20,20
+História de Portugal,teex/amalia:q4_K_M,20,0.3,0.5,0.466,0.777,0.7,20,20,20,20,20
+Jogos Olímpicos,llama3.1:8b,18,0.0,0.111,0.173,0.671,0.389,18,18,18,18,18
+Jogos Olímpicos,teex/amalia:q4_K_M,18,0.056,0.222,0.136,0.644,0.333,18,18,18,18,18
+Mitologia Grega,llama3.1:8b,20,0.1,0.5,0.27,0.748,0.85,20,20,20,20,20
+Mitologia Grega,teex/amalia:q4_K_M,20,0.1,0.6,0.273,0.744,0.95,20,20,20,20,20
+Motorizações e Energia Automóvel,llama3.1:8b,20,0.05,0.3,0.199,0.707,0.5,20,20,20,20,20
+Motorizações e Energia Automóvel,teex/amalia:q4_K_M,20,0.1,0.75,0.4,0.758,1.0,20,20,20,20,20
+Países,llama3.1:8b,20,0.0,0.3,0.07,0.641,0.4,20,20,20,20,20
+Países,teex/amalia:q4_K_M,20,0.2,0.5,0.28,0.745,0.6,20,20,20,20,20
+Pintura,llama3.1:8b,19,0.263,0.737,0.457,0.751,0.789,19,19,19,19,19
+Pintura,teex/amalia:q4_K_M,19,0.368,0.789,0.564,0.793,0.842,19,19,19,19,19
+Teologia e Filosofia,llama3.1:8b,20,0.0,0.05,0.281,0.757,0.7,20,20,20,20,20
+Teologia e Filosofia,teex/amalia:q4_K_M,20,0.0,0.05,0.324,0.771,0.85,20,20,20,20,20
+Tradições Académicas de Coimbra,llama3.1:8b,20,0.0,0.1,0.224,0.72,0.3,20,20,20,20,20
+Tradições Académicas de Coimbra,teex/amalia:q4_K_M,20,0.05,0.1,0.268,0.748,0.25,20,20,20,20,20
+Tradições e festas,llama3.1:8b,20,0.1,0.4,0.348,0.73,0.6,20,20,20,20,20
+Tradições e festas,teex/amalia:q4_K_M,20,0.15,0.35,0.367,0.748,0.8,20,20,20,20,20
+Ténis,llama3.1:8b,20,0.0,0.4,0.175,0.698,0.7,20,20,20,20,20
+Ténis,teex/amalia:q4_K_M,20,0.0,0.55,0.23,0.704,0.65,20,20,20,20,20
+Videojogos,llama3.1:8b,20,0.05,0.65,0.236,0.722,0.8,20,20,20,20,20
+Videojogos,teex/amalia:q4_K_M,20,0.2,0.5,0.378,0.743,0.7,20,20,20,20,20
+Vinhos,llama3.1:8b,20,0.0,0.15,0.204,0.724,0.5,20,20,20,20,20
+Vinhos,teex/amalia:q4_K_M,20,0.0,0.15,0.176,0.7,0.55,20,20,20,20,20

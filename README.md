@@ -4,7 +4,9 @@ O projeto compara o AMALIA e o Llama 3.1 8B em perguntas de resposta curta, com 
 
 ## Preparação
 
-No ambiente virtual Python, instalar as dependências e os modelos no Ollama:
+No ambiente virtual Python, instalar as dependências e os modelos no Ollama.
+
+Windows (PowerShell):
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
@@ -13,9 +15,24 @@ ollama pull llama3.1:8b
 ollama pull qwen2.5:7b
 ```
 
+Linux/macOS (bash), criando o ambiente virtual se ainda não existir:
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements.txt
+ollama pull teex/amalia:q4_K_M
+ollama pull llama3.1:8b
+ollama pull qwen2.5:7b
+```
+
+Nos restantes comandos, `.\.venv\Scripts\python.exe` (Windows) equivale a `.venv/bin/python` (Linux/macOS). As versões das dependências diretas estão fixadas em `requirements.txt`; `scikit-learn` é necessário para o modo `--rag`.
+
 O serviço Ollama tem de estar disponível em `http://localhost:11434`. O BERTScore usa o codificador [Albertina 100M PTPT](https://huggingface.co/PORTULAN/albertina-100m-portuguese-ptpt-encoder), adaptado com dados de português europeu, com a 12.ª camada. O modelo deriva do DeBERTa desenvolvido para inglês e reutiliza o seu tokenizador; não foi treinado exclusivamente de raiz em português. A escolha da camada não foi calibrada com avaliações humanas. O primeiro uso pode necessitar de acesso à rede para descarregar o modelo. Os pesos são convertidos para `float32` antes da avaliação; CUDA é utilizada quando disponível, caso contrário usa-se a CPU. Os modelos não devem ser incluídos na entrega.
 
 ## Execução e retoma
+
+Windows (PowerShell):
 
 ```powershell
 # Ensaio independente com uma pergunta por modelo
@@ -25,13 +42,32 @@ O serviço Ollama tem de estar disponível em `http://localhost:11434`. O BERTSc
 .\.venv\Scripts\python.exe main.py all --run-id nova-ptpt
 ```
 
+Linux/macOS (bash), com o ambiente virtual ativo:
+
+```bash
+# Ensaio independente com uma pergunta por modelo
+python main.py all --limit 1 --run-id verificacao-ptpt
+
+# Experiência completa: 453 perguntas, dois modelos e respetivos julgamentos
+python main.py all --run-id nova-ptpt
+```
+
 As fases `generate`, `judge`, `score` e `analyze` podem ser executadas separadamente, com os mesmos argumentos e `--run-id`. Após interrupção, repetir o comando retoma as previsões e os vereditos já guardados. O manifesto impede a retoma se os dados, os modelos, os prompts, o código ou a configuração tiverem mudado; nesse caso, usar outro `--run-id`.
 
 Para recalcular apenas as métricas de uma experiência compatível e completa, preservando as suas previsões e vereditos, criar uma análise separada:
 
+Windows (PowerShell):
+
 ```powershell
 .\.venv\Scripts\python.exe main.py score --run-id principal-ptpt --source-run principal
 .\.venv\Scripts\python.exe main.py analyze --run-id principal-ptpt --source-run principal
+```
+
+Linux/macOS (bash):
+
+```bash
+python main.py score --run-id principal-ptpt --source-run principal
+python main.py analyze --run-id principal-ptpt --source-run principal
 ```
 
 `--source-run` verifica os dados, modelos, prompts e módulos usados para geração e julgamento, regista o hash do manifesto de origem e nunca altera a experiência original. Usar sempre esta opção nas fases `score` e `analyze` da análise derivada; se a origem não estiver completa, a pontuação falha, salvo com `--allow-partial`.
@@ -50,7 +86,9 @@ Os dados de cada execução ficam em `results/meta2/<run-id>/`: o manifesto regi
 
 ## Estrutura e limites
 
-`main.py` chama `qa_pipeline/cli.py`. A configuração central está em `qa_pipeline/config.py`; `config.py` na raiz mantém compatibilidade. Os restantes módulos tratam dados, cliente Ollama, cache, geração, julgamento, métricas e análise. Os testes são executados com `python -m unittest discover -s tests -v`.
+`main.py` chama `qa_pipeline/cli.py`. A configuração central está em `qa_pipeline/config.py`. Os restantes módulos tratam dados, cliente Ollama, cache, geração, julgamento, métricas, recuperação lexical e análise. Os testes são executados com `.\.venv\Scripts\python.exe -m unittest discover -s tests -v` (Windows) ou `python -m unittest discover -s tests -v` (Linux/macOS, com o ambiente ativo).
+
+O enunciado do projeto (`Projeto_Enunciado_26_27.pdf`) é fornecido pela unidade curricular e não é versionado; a cópia local está na pasta acima do repositório. Do diretório `results/` são versionados o `manifest.json` de cada experiência, o `all_results.csv` e as `tabela_*.csv` das análises; as caches `*.jsonl`, as figuras e os modelos ficam fora do repositório.
 
 A opção `--rag` conserva uma experiência lexical anterior em `results/rag-experimental/`, separada da Meta 2. **Não cumpre a Meta 3**: esta exige documentos sobre pelo menos um tema, uma base de dados vetorial e avaliação da recuperação. O desenvolvimento dessa etapa fica para trabalho posterior.
 

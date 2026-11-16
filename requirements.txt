@@ -1,6 +1,10 @@
-pandas
-requests
-tqdm
-matplotlib
-torch
-bert-score
+# Dependências diretas, fixadas a partir do .venv usado nas experiências (Python 3.14).
+# As transitivas (numpy, scipy, transformers, ...) são resolvidas pelo pip.
+bert-score==0.3.13
+matplotlib==3.11.2
+pandas==3.1.0
+requests==2.34.2
+scikit-learn==1.9.1
+# No Windows foi instalado 2.15.0+cpu; sem o sufixo, o pip escolhe o wheel da plataforma.
+torch==2.15.0
+tqdm==4.70.1

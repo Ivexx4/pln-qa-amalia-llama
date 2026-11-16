@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "mode": "meta2",
+  "datasets": {
+    "train": {
+      "path": "C:\\Users\\ivoro\\OneDrive\\Ambiente de Trabalho\\LECD\\3º Ano\\PLN\\data\\dataset_PLN_train.tsv",
+      "sha256": "f23fc48b54a89428841fa094fd7d8a38466006bb7fb2b7a1acc14d25830e904b"
+    },
+    "test": {
+      "path": "C:\\Users\\ivoro\\OneDrive\\Ambiente de Trabalho\\LECD\\3º Ano\\PLN\\data\\dataset_PLN_test.tsv",
+      "sha256": "6c7d7eef314b6910adf820884158ba353a249b291d6d6e0d898415bd7863f1e4"
+    }
+  },
+  "models": [
+    "teex/amalia:q4_K_M",
+    "llama3.1:8b"
+  ],
+  "judge_model": "qwen2.5:7b",
+  "ollama_model_digests": {
+    "llama3.1:8b": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+    "qwen2.5:7b": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "teex/amalia:q4_K_M": "91184f16bd802eb5d14a0dd11ccc9e3a17ce1c64d29f0f2af5cfec1227afdb04"
+  },
+  "ollama_url": "http://localhost:11434",
+  "generation": {
+    "system_prompt": "És um assistente que responde a perguntas de cultura geral em português europeu. Responde apenas com uma resposta curta (no máximo uma frase), sem explicações adicionais.",
+    "temperature": 0,
+    "seed": 42,
+    "max_tokens": 120
+  },
+  "judgement": {
+    "prompt": "Avalia se a resposta candidata está correta face à resposta de referência.\n\nPergunta: {q}\nResposta de referência: {gold}\nResposta candidata: {pred}\n\nConsidera a resposta candidata correta se transmite a mesma informação essencial que a referência\n(ignora diferenças de formulação, nível de detalhe ou formato de datas). Se contradiz a referência,\nomite a informação pedida ou não responde, é incorreta.\nResponde apenas com um objeto JSON válido, sem texto adicional, neste formato:\n{{\"veredito\": \"CORRETO\"}}\nO valor de \"veredito\" tem de ser exatamente \"CORRETO\" ou \"INCORRETO\".",
+    "cache_version": "json-v1",
+    "temperature": 0,
+    "seed": 42,
+    "max_tokens": 32
+  },
+  "metrics": {
+    "bert_model": "PORTULAN/albertina-100m-portuguese-ptpt-encoder",
+    "bert_num_layers": 12,
+    "bert_batch_size": 8,
+    "names": [
+      "EM",
+      "Contains",
+      "ROUGE_L",
+      "BERTScore_F1",
+      "Judge"
+    ]
+  },
+  "versions": {
+    "python": "3.14.0",
+    "pandas": "3.1.0",
+    "requests": "2.34.2",
+    "tqdm": "4.70.1",
+    "matplotlib": "3.11.2",
+    "torch": "2.15.0+cpu",
+    "bert-score": "0.3.13",
+    "transformers": "5.22.1"
+  },
+  "source_sha256": {
+    "config.py": "78dd1d1a13e93e99dae961608c8fa793d2b8a75c5aada150f7a3e1ad248f9234",
+    "data.py": "822d0ec7ffbf7c0c100c32037899069f792380827e9ae47e35e2e9bdd58f7c9c",
+    "cache.py": "9da643cf97df74011ccb729eeb0ec61cf31c446c6547c28ec7b73d016ae558f0",
+    "cli.py": "a20bab5b775abcf870dbd3f4b0cf3fb104d829b40929899c45756a94b28f635c",
+    "generation.py": "f43921b85c23c6246399a882c3d536b6aa3e343efd114ae6cb9bbad3dd7ddcf7",
+    "judge.py": "cca1afd1c92702f52d8f2a62c5794f4aa7023c4a85018c39d76e43033bd79f2a",
+    "llm.py": "69de183998052fca4f73ba3549e10935f91bd0d1bde1541d12c0565697849321",
+    "prompts.py": "d8b8e7eaa120719c153fdd1ead77209c7e4860d4a4503236c291d6fcc6fd2a10",
+    "metrics.py": "0de5fd4cb2fbcf35ad08a728ed6cc6909bbdc988eda01b98126a54a600d9668c",
+    "scoring.py": "f9e574fa9ff787d9dd96bc671183094bc3161a488939c6cea5882027fe9db4f4",
+    "analysis.py": "b8a0296d7d1fea587584f72ec34c0b9321559b9e9be3604870ff240448ea844d"
+  },
+  "source_run": {
+    "id": "principal",
+    "manifest_sha256": "34deb1b00c05fe050f24e8cb2e6c9cdaa2b1996bd4904e88aeb946bf5bf05048"
+  }
+}
