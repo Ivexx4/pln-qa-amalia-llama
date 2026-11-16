@@ -9,6 +9,18 @@ from . import config
 logger = logging.getLogger(__name__)
 
 
+def model_digests(models: list[str]) -> dict[str, str]:
+    """Identifica as versões exatas dos modelos instalados no Ollama."""
+    response = requests.get(f"{config.OLLAMA_URL}/api/tags", timeout=15)
+    response.raise_for_status()
+    installed = {item.get("name", item.get("model")): item.get("digest")
+                 for item in response.json().get("models", [])}
+    missing = [name for name in models if not installed.get(name)]
+    if missing:
+        raise ValueError(f"Modelos não encontrados no Ollama ou sem digest: {', '.join(missing)}")
+    return {name: installed[name] for name in sorted(set(models))}
+
+
 def chat(model: str, messages: list, max_tokens: int = config.GEN_MAX_TOKENS) -> str:
     payload = {
         "model": model,

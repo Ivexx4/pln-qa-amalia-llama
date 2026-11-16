@@ -28,16 +28,24 @@ def parse_verdict(text: str) -> int | None:
     return None
 
 
-def judge(df, models, judge_model):
+def judge(df, models, judge_model, run_dir=None, allow_partial=False):
     for model in models:
-        preds = cache.read_cache(cache.preds_path(model))
-        path = cache.judge_path(model, judge_model)
+        preds = cache.read_cache(cache.preds_path(model, run_dir))
+        path = cache.judge_path(model, judge_model, run_dir)
         done = cache.read_cache(path)
+        missing = df[~df["id"].isin(preds)]
+        if not missing.empty and not allow_partial:
+            raise ValueError(f"Faltam {len(missing)} previsões de {model}; execute generate primeiro.")
+        for _, row in df[df["id"].isin(preds)].iterrows():
+            identifier = row["id"]
+            cache.validate_prediction(preds[identifier], row["Pergunta"], identifier)
+            if identifier in done:
+                cache.validate_judgement(done[identifier], preds[identifier]["pred"], identifier)
         todo = df[df["id"].isin(preds) & ~df["id"].isin(done)]
         for _, row in tqdm(todo.iterrows(), total=len(todo), desc=f"juiz({model})"):
-            prompt = JUDGE_PROMPT.format(q=row["Pergunta"], gold=row["Resposta"],
-                                         pred=preds[row["id"]]["pred"])
+            pred = preds[row["id"]]["pred"]
+            prompt = JUDGE_PROMPT.format(q=row["Pergunta"], gold=row["Resposta"], pred=pred)
             out = llm.chat(judge_model, [{"role": "user", "content": prompt}],
                            max_tokens=config.JUDGE_MAX_TOKENS)
-            cache.append_cache(path, {"id": row["id"], "raw": out,
-                                      "judge": parse_verdict(out)})
+            cache.append_cache(path, {"id": row["id"], "pred_sha256": cache.digest_text(pred),
+                                      "raw": out, "judge": parse_verdict(out)})

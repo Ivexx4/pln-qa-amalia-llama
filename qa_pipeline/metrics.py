@@ -1,4 +1,4 @@
-"""Métricas lexicais (sem dependências pesadas): Exact Match, Contains e ROUGE-L."""
+"""Métricas lexicais com normalização de maiúsculas, acentos e pontuação."""
 import re
 import unicodedata
 

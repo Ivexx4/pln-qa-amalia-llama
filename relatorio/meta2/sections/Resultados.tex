@@ -1,6 +1,6 @@
 \section{Resultados}
 
-AMALIA obteve médias superiores às de Llama nas cinco métricas (Tabela~\ref{tab:resultados-globais}). O juiz classificou como corretas 68,4\% das respostas de AMALIA e 60,7\% das de Llama; EM foi 13,0\% e 4,6\%. A diferença entre EM e as métricas semânticas reflete, em parte, respostas válidas com formulações diferentes.
+Na nova execução, AMALIA obteve médias superiores às de Llama nas cinco métricas (Tabela~\ref{tab:resultados-globais}). O juiz classificou como corretas 67,3\% das respostas de AMALIA e 60,0\% das de Llama; EM foi 13,0\% e 6,2\%. A diferença entre EM e as métricas semânticas pode refletir, em parte, respostas válidas com formulações diferentes. O BERTScore usa Albertina; estes resultados não devem ser confundidos com os ficheiros históricos diretamente em \path{results/}.
 
 \begin{table}[ht]
 \centering\small
@@ -8,12 +8,12 @@ AMALIA obteve médias superiores às de Llama nas cinco métricas (Tabela~\ref{t
 \toprule
 Modelo & EM & Contains & ROUGE-L & BERTScore & Juiz \\
 \midrule
-AMALIA & 0,130 & 0,415 & 0,335 & 0,743 & 0,684 \\
-Llama 3.1 8B & 0,046 & 0,360 & 0,259 & 0,721 & 0,607 \\
+AMALIA & 0,130 & 0,411 & 0,334 & 0,696 & 0,673 \\
+Llama 3.1 8B & 0,062 & 0,360 & 0,270 & 0,665 & 0,600 \\
 \bottomrule
 \end{tabular}
-\caption{Médias globais (453 perguntas por modelo).}
+\caption{Médias globais da execução \texttt{principal-ptpt}, com 453 entradas por modelo e BERTScore calculado com Albertina.}
 \label{tab:resultados-globais}
 \end{table}
 
-Por origem, o juiz deu a AMALIA 66,1\% em HUM e 70,9\% em LLM; a Llama, 58,3\% e 63,2\%. São diferenças observadas, não evidência de causalidade. Por tema, AMALIA atingiu 100\% em Mitologia Grega e Motorizações e Energia Automóvel (20 perguntas em cada), mas 27,8\% em Jogos Olímpicos (18). Os mínimos de Llama foram 30\% em Basquetebol e Tradições Académicas de Coimbra (20 cada). Com apenas 18–20 perguntas por tema, estas médias são indicativas.
+Por origem, o juiz deu a AMALIA 64,3\% em HUM e 70,4\% em LLM; a Llama, 58,7\% e 61,4\%. São diferenças observadas, não evidência de causalidade. Por tema, AMALIA atingiu 100\% em Motorizações e Energia Automóvel (20 perguntas), mas 25\% em Tradições Académicas de Coimbra (20). Os mínimos de Llama foram 30\% em Basquetebol e Tradições Académicas de Coimbra (20 cada). Com apenas 18–20 perguntas por tema, estas médias são indicativas.

@@ -1,23 +1,38 @@
-"""Configuração central: caminhos, modelos e parâmetros por omissão."""
+"""Configuração central dos dados e das experiências de resposta a perguntas."""
 from pathlib import Path
 
+ROOT_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = ROOT_DIR / "data"
+RESULTS_DIR = ROOT_DIR / "results"
+RESPONSES_DIR = RESULTS_DIR / "responses"
+METRICS_DIR = RESULTS_DIR / "metrics"
+PLOTS_DIR = RESULTS_DIR / "plots"
+
+TRAIN_PATH = DATA_DIR / "dataset_PLN_train.tsv"
+TEST_PATH = DATA_DIR / "dataset_PLN_test.tsv"
+DEFAULT_DATASET = TEST_PATH
+DEFAULT_RESPONSES = RESPONSES_DIR / "responses.csv"
+DEFAULT_METRICS = METRICS_DIR / "metrics.csv"
+
 OLLAMA_URL = "http://localhost:11434"
-
-DEFAULT_MODELS = ["teex/amalia:q4_K_M", "llama3.1:8b"]
+DEFAULT_OLLAMA_URL = OLLAMA_URL
+DEFAULT_AMALIA_MODEL = "teex/amalia:q4_K_M"
+DEFAULT_LLAMA_MODEL = "llama3.1:8b"
+DEFAULT_MODELS = [DEFAULT_AMALIA_MODEL, DEFAULT_LLAMA_MODEL]
 DEFAULT_JUDGE = "qwen2.5:7b"
-DEFAULT_BERT_MODEL = "bert-base-multilingual-cased"
+DEFAULT_BERT_MODEL = "PORTULAN/albertina-100m-portuguese-ptpt-encoder"
+DEFAULT_BERTSCORE_NUM_LAYERS = 12
+DEFAULT_BERTSCORE_DEVICE = "auto"
+DEFAULT_BERTSCORE_BATCH_SIZE = 8
+DEFAULT_RUN_ID = "nova-ptpt"
 
-TRAIN_PATH = Path("data/dataset_PLN_train.tsv")
-TEST_PATH = Path("data/dataset_PLN_test.tsv")
-RESULTS_DIR = Path("results")
-
-# Decodificação determinística
 SEED = 42
 TEMPERATURE = 0
 GEN_MAX_TOKENS = 120
 JUDGE_MAX_TOKENS = 32
 JUDGE_CACHE_VERSION = "json-v1"
 REQUEST_TIMEOUT = 600
+OLLAMA_TIMEOUT_SECONDS = REQUEST_TIMEOUT
 HTTP_MAX_ATTEMPTS = 3
 HTTP_RETRY_BACKOFF_SECONDS = 1
 RETRYABLE_HTTP_STATUSES = {408, 429, 500, 502, 503, 504}
