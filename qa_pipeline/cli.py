@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 
 from . import cache, config, llm, prompts
-from .analysis import analyze
+from .analysis import analyze, export_statistics
 from .data import load_data
 from .generation import generate
 from .judge import judge
@@ -34,12 +34,14 @@ def build_parser() -> argparse.ArgumentParser:
     ap.add_argument("--allow-partial", action="store_true", help="permitir resultados incompletos, identificados como parciais")
     ap.add_argument("--rag", action="store_true", help="modo experimental anterior, separado da Meta 2; não corresponde à Meta 3")
     ap.add_argument("--rag-top-k", type=int, default=3, help="número de itens de contexto no modo experimental")
+    ap.add_argument("--stats", action="store_true",
+                    help="apenas as tabelas estatísticas, a partir do all_results.csv já existente")
     return ap
 
 
 def _versions() -> dict:
     result = {"python": platform.python_version()}
-    for name in ("pandas", "requests", "tqdm", "matplotlib", "torch", "bert-score", "transformers"):
+    for name in ("numpy", "pandas", "requests", "tqdm", "matplotlib", "torch", "bert-score", "transformers", "scipy"):
         try:
             result[name] = importlib.metadata.version(name)
         except importlib.metadata.PackageNotFoundError:
@@ -53,7 +55,7 @@ def build_manifest(args, digests: dict) -> dict:
         path = path.resolve()
         datasets[name] = {"path": str(path), "sha256": cache.digest_file(path) if path.is_file() else None}
     modules = ["config.py", "data.py", "cache.py", "cli.py", "generation.py", "judge.py",
-               "llm.py", "prompts.py", "metrics.py", "scoring.py", "analysis.py"]
+               "llm.py", "prompts.py", "metrics.py", "scoring.py", "analysis.py", "stats.py"]
     if args.rag:
         modules.append("retrieval.py")
     code = {name: cache.digest_file(Path(__file__).parent / name) for name in modules}
@@ -120,15 +122,22 @@ def main(argv=None) -> None:
         print("Aviso: o modelo de avaliação também consta entre os modelos avaliados.")
     if args.rag:
         print("Aviso: RAG experimental não cumpre os requisitos da Meta 3 e usa uma pasta separada.")
+    if args.stats and args.stage != "analyze":
+        parser.error("--stats só pode ser usado com a fase analyze")
 
-    df = load_data(args.train, args.test, args.split)
-    if args.limit:
-        df = df.head(args.limit)
     mode = "rag-experimental" if args.rag else "meta2"
     run_dir = args.output_dir.resolve() / mode / args.run_id
     scope = f"{args.split}_{'limite_' + str(args.limit) if args.limit else 'todas'}"
     output_dir = run_dir / "analises" / (scope + ("_parcial" if args.allow_partial else "_completa"))
     source_dir = args.output_dir.resolve() / mode / args.source_run if args.source_run else run_dir
+    if args.stats:
+        # Não reescreve o manifesto nem as restantes tabelas: apenas a análise estatística.
+        export_statistics(output_dir)
+        return
+
+    df = load_data(args.train, args.test, args.split)
+    if args.limit:
+        df = df.head(args.limit)
     source_manifest_path = source_dir / "manifest.json"
     if args.stage in ("generate", "judge", "all"):
         digests = llm.model_digests(args.models + [args.judge_model])

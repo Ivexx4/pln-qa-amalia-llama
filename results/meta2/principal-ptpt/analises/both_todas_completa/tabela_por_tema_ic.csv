@@ -1,0 +1,231 @@
+Tema,Modelo,metrica,n_tema,n,aviso,media,ic_95_inferior,ic_95_superior
+Animais,llama3.1:8b,EM,18,18,n<30,0.05555555555555555,0.0,0.16666666666666666
+Animais,teex/amalia:q4_K_M,EM,18,18,n<30,0.0,0.0,0.0
+Basquetebol,llama3.1:8b,EM,20,20,n<30,0.0,0.0,0.0
+Basquetebol,teex/amalia:q4_K_M,EM,20,20,n<30,0.05,0.0,0.15
+Cibersegurança,llama3.1:8b,EM,20,20,n<30,0.1,0.0,0.25
+Cibersegurança,teex/amalia:q4_K_M,EM,20,20,n<30,0.15,0.0,0.3
+Cinema,llama3.1:8b,EM,20,20,n<30,0.1,0.0,0.25
+Cinema,teex/amalia:q4_K_M,EM,20,20,n<30,0.15,0.0,0.3
+Corpo Humano e Anatomia,llama3.1:8b,EM,20,20,n<30,0.0,0.0,0.0
+Corpo Humano e Anatomia,teex/amalia:q4_K_M,EM,20,20,n<30,0.15,0.0,0.3
+F1,llama3.1:8b,EM,18,18,n<30,0.0,0.0,0.0
+F1,teex/amalia:q4_K_M,EM,18,18,n<30,0.1111111111111111,0.0,0.2777777777777778
+Filosofia,llama3.1:8b,EM,20,20,n<30,0.05,0.0,0.15
+Filosofia,teex/amalia:q4_K_M,EM,20,20,n<30,0.15,0.0,0.3
+Futebol,llama3.1:8b,EM,20,20,n<30,0.1,0.0,0.25
+Futebol,teex/amalia:q4_K_M,EM,20,20,n<30,0.2,0.05,0.4
+Gastronomia,llama3.1:8b,EM,20,20,n<30,0.15,0.0,0.3
+Gastronomia,teex/amalia:q4_K_M,EM,20,20,n<30,0.1,0.0,0.25
+Geografia de Portugal,llama3.1:8b,EM,20,20,n<30,0.1,0.0,0.25
+Geografia de Portugal,teex/amalia:q4_K_M,EM,20,20,n<30,0.2,0.05,0.4
+Geografia do Brasil,llama3.1:8b,EM,20,20,n<30,0.1,0.0,0.25
+Geografia do Brasil,teex/amalia:q4_K_M,EM,20,20,n<30,0.2,0.05,0.4
+História de Portugal,llama3.1:8b,EM,20,20,n<30,0.1,0.0,0.25
+História de Portugal,teex/amalia:q4_K_M,EM,20,20,n<30,0.3,0.1,0.5
+Jogos Olímpicos,llama3.1:8b,EM,18,18,n<30,0.0,0.0,0.0
+Jogos Olímpicos,teex/amalia:q4_K_M,EM,18,18,n<30,0.05555555555555555,0.0,0.16666666666666666
+Mitologia Grega,llama3.1:8b,EM,20,20,n<30,0.1,0.0,0.25
+Mitologia Grega,teex/amalia:q4_K_M,EM,20,20,n<30,0.1,0.0,0.25
+Motorizações e Energia Automóvel,llama3.1:8b,EM,20,20,n<30,0.05,0.0,0.15
+Motorizações e Energia Automóvel,teex/amalia:q4_K_M,EM,20,20,n<30,0.1,0.0,0.25
+Países,llama3.1:8b,EM,20,20,n<30,0.0,0.0,0.0
+Países,teex/amalia:q4_K_M,EM,20,20,n<30,0.2,0.05,0.4
+Pintura,llama3.1:8b,EM,19,19,n<30,0.2631578947368421,0.05263157894736842,0.47368421052631576
+Pintura,teex/amalia:q4_K_M,EM,19,19,n<30,0.3684210526315789,0.15789473684210525,0.5789473684210527
+Teologia e Filosofia,llama3.1:8b,EM,20,20,n<30,0.0,0.0,0.0
+Teologia e Filosofia,teex/amalia:q4_K_M,EM,20,20,n<30,0.0,0.0,0.0
+Tradições Académicas de Coimbra,llama3.1:8b,EM,20,20,n<30,0.0,0.0,0.0
+Tradições Académicas de Coimbra,teex/amalia:q4_K_M,EM,20,20,n<30,0.05,0.0,0.15
+Tradições e festas,llama3.1:8b,EM,20,20,n<30,0.1,0.0,0.25
+Tradições e festas,teex/amalia:q4_K_M,EM,20,20,n<30,0.15,0.0,0.3
+Ténis,llama3.1:8b,EM,20,20,n<30,0.0,0.0,0.0
+Ténis,teex/amalia:q4_K_M,EM,20,20,n<30,0.0,0.0,0.0
+Videojogos,llama3.1:8b,EM,20,20,n<30,0.05,0.0,0.15
+Videojogos,teex/amalia:q4_K_M,EM,20,20,n<30,0.2,0.05,0.4
+Vinhos,llama3.1:8b,EM,20,20,n<30,0.0,0.0,0.0
+Vinhos,teex/amalia:q4_K_M,EM,20,20,n<30,0.0,0.0,0.0
+Animais,llama3.1:8b,Contains,18,18,n<30,0.05555555555555555,0.0,0.16666666666666666
+Animais,teex/amalia:q4_K_M,Contains,18,18,n<30,0.05555555555555555,0.0,0.16666666666666666
+Basquetebol,llama3.1:8b,Contains,20,20,n<30,0.25,0.1,0.45
+Basquetebol,teex/amalia:q4_K_M,Contains,20,20,n<30,0.2,0.05,0.4
+Cibersegurança,llama3.1:8b,Contains,20,20,n<30,0.25,0.1,0.45
+Cibersegurança,teex/amalia:q4_K_M,Contains,20,20,n<30,0.25,0.1,0.45
+Cinema,llama3.1:8b,Contains,20,20,n<30,0.3,0.1,0.5
+Cinema,teex/amalia:q4_K_M,Contains,20,20,n<30,0.4,0.2,0.6
+Corpo Humano e Anatomia,llama3.1:8b,Contains,20,20,n<30,0.25,0.05,0.45
+Corpo Humano e Anatomia,teex/amalia:q4_K_M,Contains,20,20,n<30,0.6,0.4,0.8
+F1,llama3.1:8b,Contains,18,18,n<30,0.5555555555555556,0.3333333333333333,0.7777777777777778
+F1,teex/amalia:q4_K_M,Contains,18,18,n<30,0.5555555555555556,0.3333333333333333,0.7777777777777778
+Filosofia,llama3.1:8b,Contains,20,20,n<30,0.6,0.4,0.8
+Filosofia,teex/amalia:q4_K_M,Contains,20,20,n<30,0.7,0.5,0.9
+Futebol,llama3.1:8b,Contains,20,20,n<30,0.5,0.3,0.7
+Futebol,teex/amalia:q4_K_M,Contains,20,20,n<30,0.4,0.2,0.6
+Gastronomia,llama3.1:8b,Contains,20,20,n<30,0.3,0.1,0.5
+Gastronomia,teex/amalia:q4_K_M,Contains,20,20,n<30,0.3,0.1,0.5
+Geografia de Portugal,llama3.1:8b,Contains,20,20,n<30,0.4,0.2,0.6
+Geografia de Portugal,teex/amalia:q4_K_M,Contains,20,20,n<30,0.35,0.15,0.55
+Geografia do Brasil,llama3.1:8b,Contains,20,20,n<30,0.55,0.35,0.75
+Geografia do Brasil,teex/amalia:q4_K_M,Contains,20,20,n<30,0.55,0.35,0.75
+História de Portugal,llama3.1:8b,Contains,20,20,n<30,0.55,0.35,0.75
+História de Portugal,teex/amalia:q4_K_M,Contains,20,20,n<30,0.5,0.3,0.7
+Jogos Olímpicos,llama3.1:8b,Contains,18,18,n<30,0.1111111111111111,0.0,0.2777777777777778
+Jogos Olímpicos,teex/amalia:q4_K_M,Contains,18,18,n<30,0.2222222222222222,0.05555555555555555,0.4444444444444444
+Mitologia Grega,llama3.1:8b,Contains,20,20,n<30,0.5,0.3,0.7
+Mitologia Grega,teex/amalia:q4_K_M,Contains,20,20,n<30,0.6,0.4,0.8
+Motorizações e Energia Automóvel,llama3.1:8b,Contains,20,20,n<30,0.3,0.1,0.5
+Motorizações e Energia Automóvel,teex/amalia:q4_K_M,Contains,20,20,n<30,0.75,0.55,0.9
+Países,llama3.1:8b,Contains,20,20,n<30,0.3,0.1,0.5
+Países,teex/amalia:q4_K_M,Contains,20,20,n<30,0.5,0.3,0.7
+Pintura,llama3.1:8b,Contains,19,19,n<30,0.7368421052631579,0.5263157894736842,0.8947368421052632
+Pintura,teex/amalia:q4_K_M,Contains,19,19,n<30,0.7894736842105263,0.5789473684210527,0.9473684210526315
+Teologia e Filosofia,llama3.1:8b,Contains,20,20,n<30,0.05,0.0,0.15
+Teologia e Filosofia,teex/amalia:q4_K_M,Contains,20,20,n<30,0.05,0.0,0.15
+Tradições Académicas de Coimbra,llama3.1:8b,Contains,20,20,n<30,0.1,0.0,0.25
+Tradições Académicas de Coimbra,teex/amalia:q4_K_M,Contains,20,20,n<30,0.1,0.0,0.25
+Tradições e festas,llama3.1:8b,Contains,20,20,n<30,0.4,0.2,0.6
+Tradições e festas,teex/amalia:q4_K_M,Contains,20,20,n<30,0.35,0.15,0.55
+Ténis,llama3.1:8b,Contains,20,20,n<30,0.4,0.2,0.6
+Ténis,teex/amalia:q4_K_M,Contains,20,20,n<30,0.55,0.35,0.75
+Videojogos,llama3.1:8b,Contains,20,20,n<30,0.65,0.45,0.85
+Videojogos,teex/amalia:q4_K_M,Contains,20,20,n<30,0.5,0.3,0.7
+Vinhos,llama3.1:8b,Contains,20,20,n<30,0.15,0.0,0.3
+Vinhos,teex/amalia:q4_K_M,Contains,20,20,n<30,0.15,0.0,0.3
+Animais,llama3.1:8b,ROUGE_L,18,18,n<30,0.561425037953318,0.4685482068032643,0.6616071663705629
+Animais,teex/amalia:q4_K_M,ROUGE_L,18,18,n<30,0.4876362860752106,0.3702976700863139,0.6080143858984891
+Basquetebol,llama3.1:8b,ROUGE_L,20,20,n<30,0.10436829252618726,0.044320958646616546,0.173406693817878
+Basquetebol,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.15790183792815374,0.06021929824561403,0.27936706349206347
+Cibersegurança,llama3.1:8b,ROUGE_L,20,20,n<30,0.2449757742151506,0.13521626076025356,0.37744524163838566
+Cibersegurança,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.4230690860163116,0.29243649544450545,0.5623529745865105
+Cinema,llama3.1:8b,ROUGE_L,20,20,n<30,0.2369024119831738,0.11347638968031327,0.38853683315104476
+Cinema,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.26651839584871795,0.13646738212036721,0.4173857638989709
+Corpo Humano e Anatomia,llama3.1:8b,ROUGE_L,20,20,n<30,0.1695270312762573,0.11130553656869446,0.2268812070282658
+Corpo Humano e Anatomia,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.429229797979798,0.2919315025252525,0.5791414141414142
+F1,llama3.1:8b,ROUGE_L,18,18,n<30,0.26968107905930405,0.14520927011155338,0.40447193521658176
+F1,teex/amalia:q4_K_M,ROUGE_L,18,18,n<30,0.25753449527959327,0.11991648511256353,0.4169389978213507
+Filosofia,llama3.1:8b,ROUGE_L,20,20,n<30,0.3692322645238467,0.24192007279260064,0.5048547008547007
+Filosofia,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.40222542242703535,0.2576768113159242,0.5562755216333845
+Futebol,llama3.1:8b,ROUGE_L,20,20,n<30,0.2784527400703872,0.15246050150829563,0.4191132792860733
+Futebol,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.3152449301905824,0.1453173939586983,0.49268324972129307
+Gastronomia,llama3.1:8b,ROUGE_L,20,20,n<30,0.2678165469086185,0.12504493464052288,0.43054895871392024
+Gastronomia,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.2683239348370927,0.13898488408521303,0.41868131265664166
+Geografia de Portugal,llama3.1:8b,ROUGE_L,20,20,n<30,0.40054641394037677,0.2744743015627304,0.5363642884785493
+Geografia de Portugal,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.44151974320156456,0.29084064497136325,0.599442013292211
+Geografia do Brasil,llama3.1:8b,ROUGE_L,20,20,n<30,0.29339741225643867,0.16750653027668747,0.4360740474873334
+Geografia do Brasil,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.3720495399941861,0.2142827380952381,0.5421043051398088
+História de Portugal,llama3.1:8b,ROUGE_L,20,20,n<30,0.4042446638241833,0.2754067169852353,0.5430039121109631
+História de Portugal,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.46590802767354766,0.30337339842170247,0.6324297749772023
+Jogos Olímpicos,llama3.1:8b,ROUGE_L,18,18,n<30,0.17282496946121018,0.08266479715473968,0.2691644665529047
+Jogos Olímpicos,teex/amalia:q4_K_M,ROUGE_L,18,18,n<30,0.13583611807296017,0.05105820105820106,0.2569356551099972
+Mitologia Grega,llama3.1:8b,ROUGE_L,20,20,n<30,0.2702472936420305,0.15479877932739775,0.40925206525930197
+Mitologia Grega,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.2729037820661862,0.16696381263309015,0.40300496862117696
+Motorizações e Energia Automóvel,llama3.1:8b,ROUGE_L,20,20,n<30,0.1994804057884553,0.11281568830349789,0.3080772918816649
+Motorizações e Energia Automóvel,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.40001027880974716,0.28518328030599616,0.5272038588440021
+Países,llama3.1:8b,ROUGE_L,20,20,n<30,0.07035787741670094,0.029567099567099568,0.1183283383283383
+Países,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.27986795067677417,0.12800647881530233,0.45881285932205035
+Pintura,llama3.1:8b,ROUGE_L,19,19,n<30,0.45684403315982264,0.2908039329091961,0.6349937343358395
+Pintura,teex/amalia:q4_K_M,ROUGE_L,19,19,n<30,0.5639382547277283,0.3897527910685806,0.7313774493050808
+Teologia e Filosofia,llama3.1:8b,ROUGE_L,20,20,n<30,0.28117945107043696,0.21077741194603705,0.3587208304786671
+Teologia e Filosofia,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.323623750701011,0.2328489220213497,0.4194418174974824
+Tradições Académicas de Coimbra,llama3.1:8b,ROUGE_L,20,20,n<30,0.22382187448347785,0.15456136624171962,0.3100606342491205
+Tradições Académicas de Coimbra,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.26818793604076807,0.15879492472219453,0.39234605968218766
+Tradições e festas,llama3.1:8b,ROUGE_L,20,20,n<30,0.34793378600014757,0.22497527611286194,0.48529537087317404
+Tradições e festas,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.36730273752012876,0.23592592592592593,0.5141545893719808
+Ténis,llama3.1:8b,ROUGE_L,20,20,n<30,0.174933518064323,0.09849947548796233,0.26450808198079867
+Ténis,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.2304018624993857,0.1385139871738169,0.338906997886874
+Videojogos,llama3.1:8b,ROUGE_L,20,20,n<30,0.23629125038235657,0.15636549053356638,0.3407738302738006
+Videojogos,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.3778464845827546,0.22841773533063578,0.5457118254018282
+Vinhos,llama3.1:8b,ROUGE_L,20,20,n<30,0.20393603834383214,0.1293170942862271,0.28635747039618525
+Vinhos,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.17643300295888473,0.12096503145814427,0.2347455041654077
+Animais,llama3.1:8b,BERTScore_F1,18,18,n<30,0.83703419,0.793902918138889,0.8810435432777778
+Animais,teex/amalia:q4_K_M,BERTScore_F1,18,18,n<30,0.8010076477777779,0.7536826703611111,0.8486793652222222
+Basquetebol,llama3.1:8b,BERTScore_F1,20,20,n<30,0.5665082875000002,0.5323258647125,0.601845226925
+Basquetebol,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.5937949965,0.5414914422,0.6554899236875
+Cibersegurança,llama3.1:8b,BERTScore_F1,20,20,n<30,0.6913999164999999,0.6470057911249999,0.7465167337999999
+Cibersegurança,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.7613233395,0.7091317384999999,0.8151218436249998
+Cinema,llama3.1:8b,BERTScore_F1,20,20,n<30,0.627657713,0.569655272825,0.6929643512999999
+Cinema,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.6374835195,0.575805254825,0.7083830513499999
+Corpo Humano e Anatomia,llama3.1:8b,BERTScore_F1,20,20,n<30,0.6426021675,0.6088582251499999,0.6733498000500001
+Corpo Humano e Anatomia,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.7565478014999999,0.7052734968625,0.811299605175
+F1,llama3.1:8b,BERTScore_F1,18,18,n<30,0.6274926552777778,0.5435945535763888,0.7002160831111112
+F1,teex/amalia:q4_K_M,BERTScore_F1,18,18,n<30,0.6393960494444444,0.5503329044444444,0.7250430722222221
+Filosofia,llama3.1:8b,BERTScore_F1,20,20,n<30,0.6916974124999999,0.6434642874375001,0.7436480414875001
+Filosofia,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.7024125555,0.6433784908500001,0.765366151
+Futebol,llama3.1:8b,BERTScore_F1,20,20,n<30,0.6499682035000001,0.599846849025,0.7060825265125
+Futebol,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.673564974,0.5991657662250001,0.7564301171124999
+Gastronomia,llama3.1:8b,BERTScore_F1,20,20,n<30,0.6619181344999999,0.6032407147375,0.7253992949
+Gastronomia,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.704735735,0.6454352763125,0.7708716224625001
+Geografia de Portugal,llama3.1:8b,BERTScore_F1,20,20,n<30,0.7174033455,0.6547879804000001,0.7844849742375
+Geografia de Portugal,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.7423063274999999,0.6738917117250001,0.8148240039624999
+Geografia do Brasil,llama3.1:8b,BERTScore_F1,20,20,n<30,0.6954417584999999,0.6409555711,0.7556592920375
+Geografia do Brasil,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.7265016854999999,0.6584794935249999,0.7974035664749999
+História de Portugal,llama3.1:8b,BERTScore_F1,20,20,n<30,0.711598729,0.6462949835875,0.778067425425
+História de Portugal,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.736558296,0.661534040575,0.8156781796375
+Jogos Olímpicos,llama3.1:8b,BERTScore_F1,18,18,n<30,0.6242121533333334,0.5772045741249999,0.6763066939583333
+Jogos Olímpicos,teex/amalia:q4_K_M,BERTScore_F1,18,18,n<30,0.5909042727777778,0.545013737736111,0.652735583638889
+Mitologia Grega,llama3.1:8b,BERTScore_F1,20,20,n<30,0.6868205430000001,0.6354685431375,0.7470267124625
+Mitologia Grega,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.6895908980000002,0.64206772365,0.7436240868625
+Motorizações e Energia Automóvel,llama3.1:8b,BERTScore_F1,20,20,n<30,0.6364022149999999,0.5862888980000001,0.6916496796374999
+Motorizações e Energia Automóvel,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.725621815,0.6795143153750001,0.7732505687125
+Países,llama3.1:8b,BERTScore_F1,20,20,n<30,0.5502511849999999,0.5194921413375,0.5818796180749999
+Países,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.6604942905,0.5839934322875001,0.7432577652625
+Pintura,llama3.1:8b,BERTScore_F1,19,19,n<30,0.7277698063157895,0.6530090219473683,0.8046880200263158
+Pintura,teex/amalia:q4_K_M,BERTScore_F1,19,19,n<30,0.7753142731578947,0.6973443076578947,0.8536376487894738
+Teologia e Filosofia,llama3.1:8b,BERTScore_F1,20,20,n<30,0.6878794575,0.6517545722125002,0.724244367375
+Teologia e Filosofia,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.7054374455000001,0.6693768898625,0.7430341870375
+Tradições Académicas de Coimbra,llama3.1:8b,BERTScore_F1,20,20,n<30,0.6401435845,0.5928417034375002,0.6893979547875
+Tradições Académicas de Coimbra,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.6731042735,0.6194632321625,0.73036570615
+Tradições e festas,llama3.1:8b,BERTScore_F1,20,20,n<30,0.6799221505,0.6338363215250001,0.7298970237125
+Tradições e festas,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.7222867904999999,0.6668527993875001,0.78280711205
+Ténis,llama3.1:8b,BERTScore_F1,20,20,n<30,0.6282216365,0.5847278321874999,0.670884452675
+Ténis,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.6274704195,0.5830300743999999,0.6715685895624999
+Videojogos,llama3.1:8b,BERTScore_F1,20,20,n<30,0.6887335195,0.6571258109,0.7309711114624999
+Videojogos,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.736578417,0.6859809149499999,0.7889813878499999
+Vinhos,llama3.1:8b,BERTScore_F1,20,20,n<30,0.6321223435000001,0.5940777022125001,0.6731679653625
+Vinhos,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.614314201,0.5860684661250001,0.6442539381375001
+Animais,llama3.1:8b,Judge,18,18,n<30,0.4444444444444444,0.2222222222222222,0.6666666666666666
+Animais,teex/amalia:q4_K_M,Judge,18,18,n<30,0.4444444444444444,0.2222222222222222,0.6666666666666666
+Basquetebol,llama3.1:8b,Judge,20,20,n<30,0.3,0.1,0.5
+Basquetebol,teex/amalia:q4_K_M,Judge,20,20,n<30,0.3,0.1,0.5
+Cibersegurança,llama3.1:8b,Judge,20,20,n<30,0.75,0.55,0.9
+Cibersegurança,teex/amalia:q4_K_M,Judge,20,20,n<30,0.95,0.85,1.0
+Cinema,llama3.1:8b,Judge,20,20,n<30,0.5,0.3,0.7
+Cinema,teex/amalia:q4_K_M,Judge,20,20,n<30,0.6,0.4,0.8
+Corpo Humano e Anatomia,llama3.1:8b,Judge,20,20,n<30,0.6,0.4,0.8
+Corpo Humano e Anatomia,teex/amalia:q4_K_M,Judge,20,20,n<30,0.8,0.6,0.95
+F1,llama3.1:8b,Judge,18,18,n<30,0.7777777777777778,0.5555555555555556,0.9444444444444444
+F1,teex/amalia:q4_K_M,Judge,18,18,n<30,0.7222222222222222,0.5,0.8888888888888888
+Filosofia,llama3.1:8b,Judge,20,20,n<30,0.75,0.55,0.95
+Filosofia,teex/amalia:q4_K_M,Judge,20,20,n<30,0.9,0.75,1.0
+Futebol,llama3.1:8b,Judge,20,20,n<30,0.6,0.4,0.8
+Futebol,teex/amalia:q4_K_M,Judge,20,20,n<30,0.55,0.35,0.75
+Gastronomia,llama3.1:8b,Judge,20,20,n<30,0.4,0.2,0.6
+Gastronomia,teex/amalia:q4_K_M,Judge,20,20,n<30,0.55,0.35,0.75
+Geografia de Portugal,llama3.1:8b,Judge,20,20,n<30,0.7,0.5,0.9
+Geografia de Portugal,teex/amalia:q4_K_M,Judge,20,20,n<30,0.6,0.4,0.8
+Geografia do Brasil,llama3.1:8b,Judge,20,20,n<30,0.75,0.55,0.95
+Geografia do Brasil,teex/amalia:q4_K_M,Judge,20,20,n<30,0.8,0.6,0.95
+História de Portugal,llama3.1:8b,Judge,20,20,n<30,0.7,0.5,0.9
+História de Portugal,teex/amalia:q4_K_M,Judge,20,20,n<30,0.7,0.5,0.9
+Jogos Olímpicos,llama3.1:8b,Judge,18,18,n<30,0.3888888888888889,0.16666666666666666,0.6111111111111112
+Jogos Olímpicos,teex/amalia:q4_K_M,Judge,18,18,n<30,0.3333333333333333,0.1111111111111111,0.5555555555555556
+Mitologia Grega,llama3.1:8b,Judge,20,20,n<30,0.85,0.7,1.0
+Mitologia Grega,teex/amalia:q4_K_M,Judge,20,20,n<30,0.95,0.85,1.0
+Motorizações e Energia Automóvel,llama3.1:8b,Judge,20,20,n<30,0.5,0.3,0.7
+Motorizações e Energia Automóvel,teex/amalia:q4_K_M,Judge,20,20,n<30,1.0,1.0,1.0
+Países,llama3.1:8b,Judge,20,20,n<30,0.4,0.2,0.6
+Países,teex/amalia:q4_K_M,Judge,20,20,n<30,0.6,0.4,0.8
+Pintura,llama3.1:8b,Judge,19,19,n<30,0.7894736842105263,0.5789473684210527,0.9473684210526315
+Pintura,teex/amalia:q4_K_M,Judge,19,19,n<30,0.8421052631578947,0.6842105263157895,1.0
+Teologia e Filosofia,llama3.1:8b,Judge,20,20,n<30,0.7,0.5,0.9
+Teologia e Filosofia,teex/amalia:q4_K_M,Judge,20,20,n<30,0.85,0.7,1.0
+Tradições Académicas de Coimbra,llama3.1:8b,Judge,20,20,n<30,0.3,0.1,0.5
+Tradições Académicas de Coimbra,teex/amalia:q4_K_M,Judge,20,20,n<30,0.25,0.1,0.45
+Tradições e festas,llama3.1:8b,Judge,20,20,n<30,0.6,0.4,0.8
+Tradições e festas,teex/amalia:q4_K_M,Judge,20,20,n<30,0.8,0.6,0.95
+Ténis,llama3.1:8b,Judge,20,20,n<30,0.7,0.5,0.9
+Ténis,teex/amalia:q4_K_M,Judge,20,20,n<30,0.65,0.45,0.85
+Videojogos,llama3.1:8b,Judge,20,20,n<30,0.8,0.6,0.95
+Videojogos,teex/amalia:q4_K_M,Judge,20,20,n<30,0.7,0.5,0.9
+Vinhos,llama3.1:8b,Judge,20,20,n<30,0.5,0.3,0.7
+Vinhos,teex/amalia:q4_K_M,Judge,20,20,n<30,0.55,0.35,0.75

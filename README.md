@@ -54,25 +54,41 @@ python main.py all --run-id nova-ptpt
 
 As fases `generate`, `judge`, `score` e `analyze` podem ser executadas separadamente, com os mesmos argumentos e `--run-id`. Após interrupção, repetir o comando retoma as previsões e os vereditos já guardados. O manifesto impede a retoma se os dados, os modelos, os prompts, o código ou a configuração tiverem mudado; nesse caso, usar outro `--run-id`.
 
-Para recalcular apenas as métricas de uma experiência compatível e completa, preservando as suas previsões e vereditos, criar uma análise separada:
+Para recalcular apenas as métricas de uma experiência compatível e completa, preservando as suas previsões e vereditos, criar uma análise separada. O exemplo pressupõe que as caches JSONL da execução `principal` estão disponíveis localmente; não são versionadas:
 
 Windows (PowerShell):
 
 ```powershell
-.\.venv\Scripts\python.exe main.py score --run-id principal-ptpt --source-run principal
-.\.venv\Scripts\python.exe main.py analyze --run-id principal-ptpt --source-run principal
+.\.venv\Scripts\python.exe main.py score --run-id nova-estatistica --source-run principal
+.\.venv\Scripts\python.exe main.py analyze --run-id nova-estatistica --source-run principal
 ```
 
 Linux/macOS (bash):
 
 ```bash
-python main.py score --run-id principal-ptpt --source-run principal
-python main.py analyze --run-id principal-ptpt --source-run principal
+python main.py score --run-id nova-estatistica --source-run principal
+python main.py analyze --run-id nova-estatistica --source-run principal
 ```
 
 `--source-run` verifica os dados, modelos, prompts e módulos usados para geração e julgamento, regista o hash do manifesto de origem e nunca altera a experiência original. Usar sempre esta opção nas fases `score` e `analyze` da análise derivada; se a origem não estiver completa, a pontuação falha, salvo com `--allow-partial`.
 
-Opções relevantes: `--split both|train|test`, `--limit`, `--train`, `--test`, `--models`, `--judge-model`, `--bert-model`, `--bert-num-layers`, `--bert-batch-size`, `--output-dir` e `--run-id`. `--allow-partial` permite avaliar uma execução incompleta, identificando-a como parcial; sem essa opção, previsões ou julgamentos em falta impedem a pontuação. A comparação exigida na Meta 2 deve usar AMALIA e pelo menos outro LLM aberto com menos de 21 mil milhões de parâmetros.
+Para recalcular apenas as tabelas estatísticas de uma análise já exportada, sem repetir a geração, sem reescrever as restantes tabelas e sem revalidar o manifesto:
+
+Windows (PowerShell):
+
+```powershell
+.\.venv\Scripts\python.exe main.py analyze --run-id principal-ptpt --source-run principal --stats
+```
+
+Linux/macOS (bash):
+
+```bash
+python main.py analyze --run-id principal-ptpt --source-run principal --stats
+```
+
+O modo `--stats` lê o `all_results.csv` existente e regrava `tabela_estatistica.csv` e `tabela_por_tema_ic.csv`; não cria nem altera o manifesto, pelo que também pode ser usado em execuções anteriores à introdução de `stats.py`. `--source-run` é ignorado nesse modo: a proveniência das previsões está no manifesto da execução, que não é modificado.
+
+Opções relevantes: `--split both|train|test`, `--limit`, `--train`, `--test`, `--models`, `--judge-model`, `--bert-model`, `--bert-num-layers`, `--bert-batch-size`, `--output-dir` e `--run-id`. `--allow-partial` permite avaliar uma execução incompleta, identificando-a como parcial; sem essa opção, previsões ou julgamentos em falta impedem a pontuação. `--stats` limita `analyze` às tabelas estatísticas. A comparação exigida na Meta 2 deve usar AMALIA e pelo menos outro LLM aberto com menos de 21 mil milhões de parâmetros.
 
 Os dados de cada execução ficam em `results/meta2/<run-id>/`: o manifesto regista hashes dos ficheiros e modelos, versões das dependências, prompts e parâmetros; as caches JSONL registam a identidade das perguntas e respostas. As tabelas e gráficos ficam em `analises/<escopo>_completa/` ou `analises/<escopo>_parcial/`. Os resultados históricos diretamente em `results/` são preservados e não são reutilizados pela nova execução.
 
@@ -83,6 +99,10 @@ Os dados de cada execução ficam em `results/meta2/<run-id>/`: o manifesto regi
 - As tabelas agrupam por modelo, tema, método de origem da pergunta (`HUM`/`LLM`) e autor. As médias comparam apenas perguntas comuns a todos os modelos e, para cada métrica, apenas casos com valores disponíveis para todos; as colunas `n_*` indicam o número de valores usados.
 - Respostas inválidas do juiz são identificadas e excluídas das médias, não consideradas incorretas. O juiz não substitui uma avaliação humana. As referências podem ser discutíveis ou sensíveis à data.
 - `erros_juiz.csv` e `juiz_certo_metrica_lexical_baixa.csv` apoiam a análise de erros e discrepâncias.
+- `tabela_estatistica.csv` contém médias e diferenças AMALIA − outro modelo para cada métrica, com IC percentil bootstrap a 95% (10 000 reamostragens, seed 42), emparelhado por pergunta nas diferenças. Apresenta testes bicaudais de McNemar exato (binomial) para Judge e Contains e Wilcoxon emparelhado para ROUGE-L e BERTScore. Os valores-p não são corrigidos para comparações múltiplas; não estabelecem correção factual.
+- `tabela_por_tema_ic.csv` apresenta, por tema, modelo e métrica, a média, o IC, o número de perguntas comuns (`n_tema`) e o número com valores válidos para todos os modelos (`n`). Sinaliza `n<30` por métrica; com menos de duas observações, o IC fica vazio. Os IC de temas pequenos exigem especial cautela.
+
+A inclusão de `stats.py` e das versões de NumPy e SciPy no manifesto altera a proveniência face às execuções anteriores. Para uma nova análise pelo CLI, escolher outro `--run-id` e usar `--source-run` com uma origem compatível; executar `score` e depois `analyze` para esse novo identificador.
 
 ## Estrutura e limites
 

@@ -4,8 +4,9 @@ import unittest
 from pathlib import Path
 from unittest.mock import Mock, patch
 
-from qa_pipeline import analysis, cli, config, data, generation, judge, metrics
+from qa_pipeline import analysis, cli, config, data, generation, judge, metrics, stats
 
+import numpy as np
 import pandas as pd
 import requests
 
@@ -226,6 +227,106 @@ class MetricAndAnalysisTests(unittest.TestCase):
         self.assertEqual(tables["por_modelo"].loc["m1", "n_Judge"], 0)
 
 
+class StatisticalAnalysisTests(unittest.TestCase):
+    def setUp(self):
+        self.reference = config.DEFAULT_AMALIA_MODEL
+        self.other = "outro"
+        rows = []
+        for i in range(33):
+            theme = "Grande" if i < 30 else "Pequeno" if i < 32 else "Unico"
+            common = {"id": f"q{i:02}", "Pergunta": f"Q{i}", "Gold": "R", "Tema": theme,
+                      "Metodo": "HUM", "Autor": "A", "split": "test"}
+            base = 0.2 + (i % 2) * 0.2
+            for model, bonus in ((self.reference, 0.1), (self.other, 0.0)):
+                rows.append(dict(common, Modelo=model, EM=i % 2, Contains=i % 2,
+                                 ROUGE_L=base + bonus, BERTScore_F1=base + bonus,
+                                 Judge=None if model == self.other and i in (0, 32) else i % 2))
+        self.rows = pd.DataFrame(rows)
+        self.paired = analysis.paired_results(self.rows, [self.reference, self.other])
+
+    def test_bootstrap_is_deterministic_and_differences_are_paired(self):
+        self.assertEqual(stats.BOOTSTRAP_SAMPLES, 10_000)
+        overall, themes = stats.statistical_tables(self.paired)
+        shuffled = analysis.paired_results(self.rows.sample(frac=1, random_state=77),
+                                           [self.reference, self.other])
+        overall_again, themes_again = stats.statistical_tables(shuffled)
+        pd.testing.assert_frame_equal(overall, overall_again)
+        pd.testing.assert_frame_equal(themes, themes_again)
+        row = overall[(overall["tipo"] == "diferenca") & (overall["metrica"] == "ROUGE_L")].iloc[0]
+        self.assertEqual(row["n"], 33)
+        self.assertAlmostEqual(row["estimativa"], 0.1)
+        self.assertAlmostEqual(row["ic_95_inferior"], 0.1)
+        self.assertAlmostEqual(row["ic_95_superior"], 0.1)
+        for metric in config.METRICS:
+            self.assertEqual(len(overall[(overall["tipo"] == "media") & (overall["metrica"] == metric)]), 2)
+            self.assertEqual(len(overall[(overall["tipo"] == "diferenca") & (overall["metrica"] == metric)]), 1)
+
+    def test_bootstrap_percentiles_match_seeded_resampling(self):
+        values = np.array([0.0, 0.2, 0.5, 0.7, 0.9, 1.0])
+        mean, lower, upper = stats.bootstrap_mean(values, np.random.default_rng(42))
+        generator = np.random.default_rng(42)
+        samples = generator.choice(values, size=(10_000, len(values)), replace=True)
+        expected_lower, expected_upper = np.quantile(samples.mean(axis=1), [0.025, 0.975])
+        self.assertAlmostEqual(mean, values.mean())
+        self.assertAlmostEqual(lower, expected_lower)
+        self.assertAlmostEqual(upper, expected_upper)
+
+    def test_exact_mcnemar_and_wilcoxon(self):
+        reference = np.array([1, 1, 1, 1, 1, 1, 0, 0])
+        other = 1 - reference
+        for metric in ("Judge", "Contains"):
+            result = stats.paired_test(metric, reference, other)
+            self.assertEqual((result["discordantes_amalia"], result["discordantes_outro"]), (6, 2))
+            self.assertAlmostEqual(result["p_valor"], 0.2890625)
+        reference = np.arange(1, 9, dtype=float)
+        for metric in ("ROUGE_L", "BERTScore_F1"):
+            result = stats.paired_test(metric, reference, np.zeros(8))
+            self.assertEqual(result["estatistica"], 0)
+            self.assertAlmostEqual(result["p_valor"], 0.0078125)
+            self.assertEqual(stats.paired_test(metric, reference, reference)["p_valor"], 1)
+        self.assertEqual(stats.paired_test("Judge", other, other)["p_valor"], 1)
+        self.assertTrue(pd.isna(stats.paired_test("Judge", reference[:0], other[:0])["p_valor"]))
+        with self.assertRaisesRegex(ValueError, "binária"):
+            stats.paired_test("Contains", np.array([2]), np.array([0]))
+
+    def test_theme_counts_missing_values_and_small_samples(self):
+        overall, themes = stats.statistical_tables(self.paired)
+        row = overall[(overall["tipo"] == "diferenca") & (overall["metrica"] == "Judge")].iloc[0]
+        self.assertEqual(row["n"], 31)
+        large = themes[(themes["Tema"] == "Grande") & (themes["Modelo"] == self.reference)]
+        judge_row = large[large["metrica"] == "Judge"].iloc[0]
+        self.assertEqual((judge_row["n_tema"], judge_row["n"], judge_row["aviso"]), (30, 29, "n<30"))
+        em_row = large[large["metrica"] == "EM"].iloc[0]
+        self.assertEqual((em_row["n"], em_row["aviso"]), (30, ""))
+        single = themes[(themes["Tema"] == "Unico") & (themes["Modelo"] == self.reference)]
+        self.assertTrue(pd.isna(single[single["metrica"] == "EM"].iloc[0]["ic_95_inferior"]))
+        no_judge = single[single["metrica"] == "Judge"].iloc[0]
+        self.assertEqual(no_judge["n"], 0)
+        self.assertTrue(pd.isna(no_judge["media"]))
+
+    def test_metric_with_no_valid_pairs_has_no_estimate_or_p_value(self):
+        rows = self.rows.copy()
+        rows["Judge"] = None
+        paired = analysis.paired_results(rows, [self.reference, self.other])
+        overall, themes = stats.statistical_tables(paired)
+        judge_rows = overall[overall["metrica"] == "Judge"]
+        self.assertTrue(judge_rows["n"].eq(0).all())
+        self.assertTrue(judge_rows["estimativa"].isna().all())
+        self.assertTrue(judge_rows["p_valor"].isna().all())
+        self.assertTrue(themes[themes["metrica"] == "Judge"]["aviso"].eq("n<30").all())
+
+    def test_multiple_models_and_no_amalia(self):
+        third = self.rows[self.rows["Modelo"] == self.other].copy()
+        third["Modelo"] = "terceiro"
+        data = pd.concat([self.rows, third], ignore_index=True)
+        overall, _ = stats.statistical_tables(analysis.paired_results(data, [self.reference, self.other, "terceiro"]))
+        comparisons = overall[(overall["tipo"] == "diferenca") & (overall["metrica"] == "Judge")]
+        self.assertEqual(set(comparisons["modelo_comparado"]), {self.other, "terceiro"})
+        only_other = analysis.paired_results(data, [self.other, "terceiro"])
+        without_amalia, _ = stats.statistical_tables(only_other)
+        self.assertFalse(without_amalia["tipo"].eq("diferenca").any())
+
+
 class PipelineIntegrationTests(DataTests):
     def test_incomplete_results_are_not_silent(self):
         df = data.load_data(self.train, self.test, "both")
@@ -282,11 +383,50 @@ class PipelineIntegrationTests(DataTests):
         result = pd.read_csv(run_dir / "analises" / "both_todas_completa" / "all_results.csv")
         self.assertEqual(len(result), 4)
         self.assertTrue(result["Judge_status"].eq("válido").all())
-        self.assertTrue((run_dir / "analises" / "both_todas_completa" / "tabela_por_autor.csv").exists())
+        out = run_dir / "analises" / "both_todas_completa"
+        self.assertTrue((out / "tabela_por_autor.csv").exists())
+        global_stats = pd.read_csv(out / "tabela_estatistica.csv")
+        theme_stats = pd.read_csv(out / "tabela_por_tema_ic.csv")
+        self.assertEqual(len(global_stats), 15)
+        self.assertEqual(len(theme_stats), 10)
+        self.assertTrue(theme_stats["aviso"].eq("n<30").all())
+        self.assertEqual(global_stats[global_stats["metrica"] == "Judge"]["n"].tolist(), [2, 2, 2])
         manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
+        self.assertIn("stats.py", manifest["source_sha256"])
+        self.assertIn("scipy", manifest["versions"])
         self.assertEqual(manifest["mode"], "meta2")
         self.assertEqual(manifest["metrics"]["bert_model"], config.DEFAULT_BERT_MODEL)
         self.assertEqual(manifest["metrics"]["bert_num_layers"], 12)
+
+    def test_stats_only_regenerates_statistical_tables(self):
+        args = ["all", "--train", str(self.train), "--test", str(self.test),
+                "--output-dir", str(self.root), "--run-id", "teste"]
+        digests = {name: "digest-" + name for name in config.DEFAULT_MODELS + [config.DEFAULT_JUDGE]}
+
+        def reply(model, messages, **kwargs):
+            return '{"veredito": "CORRETO"}' if model == config.DEFAULT_JUDGE else "Lisboa"
+
+        def fake_bert(frame, model, batch_size, num_layers):
+            return frame.assign(BERTScore_F1=0.8)
+
+        with patch("qa_pipeline.llm.model_digests", return_value=digests), \
+             patch("qa_pipeline.llm.chat", side_effect=reply), \
+             patch("qa_pipeline.scoring.add_bertscore", side_effect=fake_bert), \
+             patch("qa_pipeline.analysis.plot_bars"):
+            cli.main(args)
+        out = self.root / "meta2" / "teste" / "analises" / "both_todas_completa"
+        manifest_before = (self.root / "meta2" / "teste" / "manifest.json").read_text(encoding="utf-8")
+        for name in ("tabela_estatistica.csv", "tabela_por_tema_ic.csv"):
+            (out / name).unlink()
+        cli.main(["analyze", "--train", str(self.train), "--test", str(self.test),
+                  "--output-dir", str(self.root), "--run-id", "teste", "--stats"])
+        for name in ("tabela_estatistica.csv", "tabela_por_tema_ic.csv"):
+            self.assertTrue((out / name).exists())
+        self.assertEqual((self.root / "meta2" / "teste" / "manifest.json").read_text(encoding="utf-8"),
+                         manifest_before)
+        with self.assertRaisesRegex(ValueError, "Análise inexistente"):
+            cli.main(["analyze", "--train", str(self.train), "--test", str(self.test),
+                      "--output-dir", str(self.root), "--run-id", "sem-analise", "--stats"])
 
     def test_source_run_rejects_incompatible_generation(self):
         args = cli.build_parser().parse_args(["score", "--source-run", "origem"])

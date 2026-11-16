@@ -1,7 +1,7 @@
 """Fase 4: comparação emparelhada, gráficos e análise de erros."""
 import pandas as pd
 
-from . import config
+from . import config, stats
 
 
 def paired_results(res: pd.DataFrame, models: list[str]) -> pd.DataFrame:
@@ -69,6 +69,16 @@ def export_error_files(res: pd.DataFrame, out) -> None:
     print(f"Erros (juiz): {len(errors)} | Corretos mas com ROUGE-L<0,3: {len(disc)}")
 
 
+def export_statistics(out) -> None:
+    """Recalcula apenas as tabelas estatísticas de uma análise já exportada."""
+    path = out / "all_results.csv"
+    if not path.exists():
+        raise ValueError(f"Análise inexistente em {out}; execute a pontuação primeiro.")
+    res = pd.read_csv(path, dtype={"Autor": str})
+    paired = paired_results(res, sorted(res["Modelo"].unique()))
+    stats.export_statistical_tables(paired, out)
+
+
 def analyze(run_dir=None, models=None) -> None:
     out = run_dir or config.RESULTS_DIR
     res = pd.read_csv(out / "all_results.csv", dtype={"Autor": str})
@@ -85,3 +95,4 @@ def analyze(run_dir=None, models=None) -> None:
     print(paired[config.METRICS].corr().round(2).to_string())
     plot_bars(paired, out)
     export_error_files(res, out)
+    stats.export_statistical_tables(paired, out)
