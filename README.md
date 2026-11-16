@@ -114,6 +114,16 @@ O ficheiro `results/meta2/<run-id>/validacao_juiz.csv` tem as colunas `id`, `Mod
 
 A fase `judge-agreement` exige `0` ou `1` em todas as linhas e grava `validacao_juiz_resumo.csv` com o número de casos, o acordo bruto, o kappa de Cohen, a precisão e o recall do juiz e a matriz de confusão (`tp`, `fp`, `fn`, `tn`), considerando CORRETO a classe positiva. Nenhuma destas fases entra em `all`.
 
+### Auditoria das referências
+
+`scripts/auditar_referencias.py` gera uma lista de casos a rever à mão, sem corrigir nem reescrever os TSV:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\auditar_referencias.py
+```
+
+O resultado fica em `auditoria_referencias.csv` (`id`, `Tema`, `Pergunta`, `Resposta`, `motivo`, `gravidade`), ordenado por gravidade. Deteta perguntas duplicadas ou quase duplicadas (similaridade de Jaccard dos tokens ≥ 0,90), respostas de um único token muito curto, respostas sem tokens ou com caracteres inválidos, perguntas com anos de 2022 em diante ou expressões dependentes da data (`atual`, `atualmente`, `mais recente`), casos em que o juiz dá CORRETO com ROUGE-L abaixo de 0,1 e perguntas em que todos os modelos dão a mesma resposta sem conter a referência. A parte que depende dos resultados usa o `all_results.csv` mais recente das análises; `--results` permite escolher outro ficheiro, `--split` restringe a divisão e `--train`/`--test`/`--output` os restantes caminhos. O script só lê o dataset; as correções são sempre manuais.
+
 Os dados de cada execução ficam em `results/meta2/<run-id>/`: o manifesto regista hashes dos ficheiros e modelos, versões das dependências, prompts e parâmetros; as caches JSONL registam a identidade das perguntas e respostas. As tabelas e gráficos ficam em `analises/<escopo>_completa/` ou `analises/<escopo>_parcial/`. Os resultados históricos diretamente em `results/` são preservados e não são reutilizados pela nova execução.
 
 ## Avaliação
