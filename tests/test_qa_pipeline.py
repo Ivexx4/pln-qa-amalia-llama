@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import Mock, patch
 
-from qa_pipeline import analysis, cli, config, data, generation, judge, metrics, stats
+from qa_pipeline import analysis, cli, config, data, generation, judge, metrics, stats, validation
 
 import numpy as np
 import pandas as pd
@@ -327,6 +327,81 @@ class StatisticalAnalysisTests(unittest.TestCase):
         self.assertFalse(without_amalia["tipo"].eq("diferenca").any())
 
 
+class ValidationTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.df = pd.DataFrame([
+            {"id": f"q{i:03}", "split": "test", "Autor": "A", "Tema": f"T{i % 3}",
+             "Metodo": "HUM", "Pergunta": f"Pergunta {i}", "Resposta": f"R{i}"}
+            for i in range(120)
+        ])
+        preds = cache.preds_path("modelo-a", self.root)
+        verdicts = cache.judge_path("modelo-a", "juiz", self.root)
+        for i, row in self.df.iterrows():
+            cache.append_cache(preds, {"id": row["id"], "pred": f"R{i}",
+                                       "question_sha256": cache.digest_text(row["Pergunta"])})
+            cache.append_cache(verdicts, {"id": row["id"], "pred_sha256": cache.digest_text(f"R{i}"),
+                                          "raw": "{}", "judge": int(i % 2 == 0)})
+        self.pairs = validation.collect_pairs(self.df, ["modelo-a"], "juiz", self.root)
+
+    def test_sample_is_stratified_and_reproducible(self):
+        self.assertEqual(len(self.pairs), 120)
+        sample = validation.stratified_sample(self.pairs)
+        self.assertEqual(len(sample), 100)
+        self.assertEqual(sample["juiz"].value_counts().to_dict(), {1: 50, 0: 50})
+        self.assertEqual(sample["id"].nunique(), 100)
+        shuffled = validation.collect_pairs(self.df.sample(frac=1, random_state=3), ["modelo-a"], "juiz", self.root)
+        pd.testing.assert_frame_equal(sample, validation.stratified_sample(shuffled))
+        small = validation.stratified_sample(self.pairs[self.pairs["juiz"] == 1], size=100)
+        self.assertEqual(len(small), 50)
+
+    def test_export_leaves_human_column_empty(self):
+        path = self.root / "validacao_juiz.csv"
+        exported = validation.export_sample(self.pairs, path)
+        saved = pd.read_csv(path, encoding="utf-8")
+        self.assertEqual(list(saved.columns), validation.SAMPLE_COLUMNS)
+        self.assertTrue(saved["humano"].isna().all())
+        self.assertEqual(len(saved), len(exported))
+        self.assertEqual(set(saved["Modelo"]), {"modelo-a"})
+        self.assertTrue(saved["Pred"].str.startswith("R").all())
+
+    def test_agreement_metrics_match_hand_computation(self):
+        sample = pd.DataFrame({"juiz": [1, 1, 1, 1, 0, 0, 0, 0],
+                               "humano": [1, 1, 1, 0, 1, 0, 0, 0]})
+        summary = validation.agreement_summary(sample)
+        self.assertEqual((summary["tp"], summary["fp"], summary["fn"], summary["tn"]), (3, 1, 1, 3))
+        self.assertAlmostEqual(summary["acordo_bruto"], 0.75)
+        self.assertAlmostEqual(summary["kappa"], 0.5)
+        self.assertAlmostEqual(summary["precisao"], 0.75)
+        self.assertAlmostEqual(summary["recall"], 0.75)
+        perfect = validation.agreement_summary(sample.assign(humano=sample["juiz"]))
+        self.assertAlmostEqual(perfect["kappa"], 1.0)
+        self.assertTrue(np.isnan(validation.agreement_summary(
+            sample.assign(juiz=1, humano=1))["kappa"]))
+
+    def test_missing_or_invalid_human_values_raise(self):
+        sample = pd.DataFrame({"juiz": [1, 0], "humano": [1, None]})
+        with self.assertRaisesRegex(ValueError, "1 valores em falta"):
+            validation.agreement_summary(sample)
+        with self.assertRaisesRegex(ValueError, "só aceita 0 ou 1"):
+            validation.agreement_summary(pd.DataFrame({"juiz": [1, 0], "humano": [1, 2]}))
+
+    def test_summary_is_written_from_filled_csv(self):
+        filled = validation.stratified_sample(self.pairs).assign(humano=lambda d: d["juiz"])
+        run_dir = self.root / "run"
+        run_dir.mkdir()
+        filled[validation.SAMPLE_COLUMNS].to_csv(run_dir / "validacao_juiz.csv", index=False)
+        summary = validation.export_summary(run_dir)
+        self.assertAlmostEqual(summary["kappa"], 1.0)
+        saved = pd.read_csv(run_dir / "validacao_juiz_resumo.csv")
+        self.assertEqual(list(saved.columns), validation.SUMMARY_COLUMNS)
+        self.assertEqual(int(saved.loc[0, "n"]), 100)
+        with self.assertRaisesRegex(ValueError, "validate-judge"):
+            validation.export_summary(self.root / "vazio")
+
+
 class PipelineIntegrationTests(DataTests):
     def test_incomplete_results_are_not_silent(self):
         df = data.load_data(self.train, self.test, "both")
@@ -427,6 +502,43 @@ class PipelineIntegrationTests(DataTests):
         with self.assertRaisesRegex(ValueError, "Análise inexistente"):
             cli.main(["analyze", "--train", str(self.train), "--test", str(self.test),
                       "--output-dir", str(self.root), "--run-id", "sem-analise", "--stats"])
+
+    def test_validate_judge_and_agreement_leave_caches_untouched(self):
+        df = data.load_data(self.train, self.test, "both")
+        run_dir = self.root / "meta2" / "teste"
+        run_dir.mkdir(parents=True)
+        for i, row in df.iterrows():
+            cache.append_cache(cache.preds_path("modelo", run_dir), {
+                "id": row["id"], "pred": "Lisboa", "question_sha256": cache.digest_text(row["Pergunta"])})
+            cache.append_cache(cache.judge_path("modelo", "juiz", run_dir), {
+                "id": row["id"], "pred_sha256": cache.digest_text("Lisboa"),
+                "raw": "{}", "judge": 1 - i})
+        caches = (cache.preds_path("modelo", run_dir), cache.judge_path("modelo", "juiz", run_dir))
+        before = {path: path.read_bytes() for path in caches}
+        args = ["--train", str(self.train), "--test", str(self.test), "--output-dir", str(self.root),
+                "--run-id", "teste", "--models", "modelo", "--judge-model", "juiz"]
+
+        cli.main(["validate-judge"] + args)
+        sample_path = run_dir / "validacao_juiz.csv"
+        saved = pd.read_csv(sample_path)
+        self.assertEqual(len(saved), 2)
+        self.assertEqual(set(saved["juiz"]), {0, 1})
+        self.assertTrue(saved["humano"].isna().all())
+        self.assertFalse((run_dir / "manifest.json").exists())
+        self.assertFalse((run_dir / "validacao_juiz_resumo.csv").exists())
+        with self.assertRaisesRegex(ValueError, "em falta"):
+            cli.main(["judge-agreement"] + args)
+
+        saved["humano"] = saved["juiz"]
+        saved.to_csv(sample_path, index=False)
+        cli.main(["judge-agreement"] + args)
+        summary = pd.read_csv(run_dir / "validacao_juiz_resumo.csv")
+        self.assertEqual(list(summary.columns), validation.SUMMARY_COLUMNS)
+        self.assertEqual(int(summary.loc[0, "n"]), 2)
+        self.assertAlmostEqual(summary.loc[0, "acordo_bruto"], 1.0)
+        self.assertAlmostEqual(summary.loc[0, "kappa"], 1.0)
+        for path, content in before.items():
+            self.assertEqual(path.read_bytes(), content)
 
     def test_source_run_rejects_incompatible_generation(self):
         args = cli.build_parser().parse_args(["score", "--source-run", "origem"])

@@ -6,7 +6,7 @@ import platform
 import re
 from pathlib import Path
 
-from . import cache, config, llm, prompts
+from . import cache, config, llm, prompts, validation
 from .analysis import analyze, export_statistics
 from .data import load_data
 from .generation import generate
@@ -14,11 +14,12 @@ from .judge import judge
 from .scoring import bert_score_layers, score
 
 STAGES = ["generate", "judge", "score", "analyze"]
+VALIDATION_STAGES = ["validate-judge", "judge-agreement"]
 
 
 def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(description="PLN Meta 2: avaliação de resposta a perguntas com LLMs.")
-    ap.add_argument("stage", choices=STAGES + ["all"])
+    ap.add_argument("stage", choices=STAGES + VALIDATION_STAGES + ["all"])
     ap.add_argument("--models", nargs="+", default=config.DEFAULT_MODELS)
     ap.add_argument("--judge-model", default=config.DEFAULT_JUDGE)
     ap.add_argument("--bert-model", default=config.DEFAULT_BERT_MODEL)
@@ -55,7 +56,8 @@ def build_manifest(args, digests: dict) -> dict:
         path = path.resolve()
         datasets[name] = {"path": str(path), "sha256": cache.digest_file(path) if path.is_file() else None}
     modules = ["config.py", "data.py", "cache.py", "cli.py", "generation.py", "judge.py",
-               "llm.py", "prompts.py", "metrics.py", "scoring.py", "analysis.py", "stats.py"]
+               "llm.py", "prompts.py", "metrics.py", "scoring.py", "analysis.py", "stats.py",
+               "validation.py"]
     if args.rag:
         modules.append("retrieval.py")
     code = {name: cache.digest_file(Path(__file__).parent / name) for name in modules}
@@ -133,6 +135,19 @@ def main(argv=None) -> None:
     if args.stats:
         # Não reescreve o manifesto nem as restantes tabelas: apenas a análise estatística.
         export_statistics(output_dir)
+        return
+    if args.stage == "validate-judge":
+        # Apenas lê previsões e vereditos: não reescreve caches, manifesto nem análises.
+        df = load_data(args.train, args.test, args.split)
+        if args.limit:
+            df = df.head(args.limit)
+        print(f"{len(df)} perguntas | modelos: {args.models} | juiz: {args.judge_model}")
+        pairs = validation.collect_pairs(df, args.models, args.judge_model, run_dir)
+        validation.export_sample(pairs, run_dir / "validacao_juiz.csv")
+        return
+    if args.stage == "judge-agreement":
+        # Resultado da validação humana: validacao_juiz.csv -> validacao_juiz_resumo.csv.
+        validation.print_summary(validation.export_summary(run_dir))
         return
 
     df = load_data(args.train, args.test, args.split)

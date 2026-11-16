@@ -90,6 +90,30 @@ O modo `--stats` lê o `all_results.csv` existente e regrava `tabela_estatistica
 
 Opções relevantes: `--split both|train|test`, `--limit`, `--train`, `--test`, `--models`, `--judge-model`, `--bert-model`, `--bert-num-layers`, `--bert-batch-size`, `--output-dir` e `--run-id`. `--allow-partial` permite avaliar uma execução incompleta, identificando-a como parcial; sem essa opção, previsões ou julgamentos em falta impedem a pontuação. `--stats` limita `analyze` às tabelas estatísticas. A comparação exigida na Meta 2 deve usar AMALIA e pelo menos outro LLM aberto com menos de 21 mil milhões de parâmetros.
 
+### Validação humana do juiz
+
+A fase `validate-judge` extrai uma amostra estratificada e reprodutível de 100 pares (pergunta, referência, resposta), com 50 vereditos CORRETO e 50 INCORRETO do juiz, usando seed 42. Só lê as caches de previsões e julgamentos: não escreve nelas, não cria manifesto e não altera análises. Se algum estrato tiver menos de 50 casos, usa o máximo disponível e avisa.
+
+Windows (PowerShell):
+
+```powershell
+.\.venv\Scripts\python.exe main.py validate-judge --run-id principal
+```
+
+Linux/macOS (bash):
+
+```bash
+python main.py validate-judge --run-id principal
+```
+
+O ficheiro `results/meta2/<run-id>/validacao_juiz.csv` tem as colunas `id`, `Modelo`, `Tema`, `Metodo`, `Pergunta`, `Gold`, `Pred`, `juiz` e `humano`; a última fica vazia para preencher com `1` (juiz correto) ou `0` (juiz incorreto). Depois de preenchida:
+
+```powershell
+.\.venv\Scripts\python.exe main.py judge-agreement --run-id principal
+```
+
+A fase `judge-agreement` exige `0` ou `1` em todas as linhas e grava `validacao_juiz_resumo.csv` com o número de casos, o acordo bruto, o kappa de Cohen, a precisão e o recall do juiz e a matriz de confusão (`tp`, `fp`, `fn`, `tn`), considerando CORRETO a classe positiva. Nenhuma destas fases entra em `all`.
+
 Os dados de cada execução ficam em `results/meta2/<run-id>/`: o manifesto regista hashes dos ficheiros e modelos, versões das dependências, prompts e parâmetros; as caches JSONL registam a identidade das perguntas e respostas. As tabelas e gráficos ficam em `analises/<escopo>_completa/` ou `analises/<escopo>_parcial/`. Os resultados históricos diretamente em `results/` são preservados e não são reutilizados pela nova execução.
 
 ## Avaliação
@@ -106,9 +130,9 @@ A inclusão de `stats.py` e das versões de NumPy e SciPy no manifesto altera a 
 
 ## Estrutura e limites
 
-`main.py` chama `qa_pipeline/cli.py`. A configuração central está em `qa_pipeline/config.py`. Os restantes módulos tratam dados, cliente Ollama, cache, geração, julgamento, métricas, recuperação lexical e análise. Os testes são executados com `.\.venv\Scripts\python.exe -m unittest discover -s tests -v` (Windows) ou `python -m unittest discover -s tests -v` (Linux/macOS, com o ambiente ativo).
+`main.py` chama `qa_pipeline/cli.py`. A configuração central está em `qa_pipeline/config.py`. Os restantes módulos tratam dados, cliente Ollama, cache, geração, julgamento, métricas, recuperação lexical, análise e validação humana do juiz. Os testes são executados com `.\.venv\Scripts\python.exe -m unittest discover -s tests -v` (Windows) ou `python -m unittest discover -s tests -v` (Linux/macOS, com o ambiente ativo).
 
-O enunciado do projeto (`Projeto_Enunciado_26_27.pdf`) é fornecido pela unidade curricular e não é versionado; a cópia local está na pasta acima do repositório. Do diretório `results/` são versionados o `manifest.json` de cada experiência, o `all_results.csv` e as `tabela_*.csv` das análises; as caches `*.jsonl`, as figuras e os modelos ficam fora do repositório.
+O enunciado do projeto (`Projeto_Enunciado_26_27.pdf`) é fornecido pela unidade curricular e não é versionado; a cópia local está na pasta acima do repositório. Do diretório `results/` são versionados o `manifest.json` de cada experiência, o `all_results.csv` e as `tabela_*.csv` das análises; as caches `*.jsonl`, as figuras, os modelos e os ficheiros `validacao_juiz*.csv` (anotações humanas locais) ficam fora do repositório.
 
 A opção `--rag` conserva uma experiência lexical anterior em `results/rag-experimental/`, separada da Meta 2. **Não cumpre a Meta 3**: esta exige documentos sobre pelo menos um tema, uma base de dados vetorial e avaliação da recuperação. O desenvolvimento dessa etapa fica para trabalho posterior.
 
