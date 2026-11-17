@@ -3,14 +3,9 @@ from tqdm import tqdm
 
 from . import cache, llm
 from .prompts import SYSTEM_PROMPT
+from .rag_prompts import PROMPTS
 
-RAG_SYSTEM_PROMPT = (
-    "És um assistente que responde a perguntas de cultura geral em português europeu. "
-    "Recebes excertos de documentos que podem ou não conter a resposta. "
-    "Se os excertos contiverem a resposta, usa-os; se não a contiverem, responde com o teu conhecimento. "
-    "Responde apenas com uma resposta curta (no máximo uma frase), sem explicações adicionais "
-    "e sem mencionar os excertos."
-)
+RAG_SYSTEM_PROMPT = PROMPTS["default"]
 
 
 def format_context(hits: list[dict]) -> str:
@@ -23,7 +18,8 @@ def build_user_prompt(question: str, hits: list[dict]) -> str:
     return f"Excertos:\n{format_context(hits)}\n\nPergunta: {question}"
 
 
-def generate_rag(df, models, retrievals: dict, run_dir) -> None:
+def generate_rag(df, models, retrievals: dict, run_dir, prompt: str = "default") -> None:
+    rag_prompt = PROMPTS[prompt]
     for model in models:
         path = cache.preds_path(model, run_dir)
         done = cache.read_cache(path)
@@ -32,7 +28,7 @@ def generate_rag(df, models, retrievals: dict, run_dir) -> None:
         todo = df[~df["id"].isin(done)]
         for _, row in tqdm(todo.iterrows(), total=len(todo), desc=f"rag({model})"):
             hits = retrievals[row["id"]]["hits"]
-            system = RAG_SYSTEM_PROMPT if hits else SYSTEM_PROMPT
+            system = rag_prompt if hits else SYSTEM_PROMPT
             pred = llm.chat(model, [{"role": "system", "content": system},
                                     {"role": "user", "content": build_user_prompt(row["Pergunta"], hits)}])
             cache.append_cache(path, {"id": row["id"], "question_sha256": cache.digest_text(row["Pergunta"]),

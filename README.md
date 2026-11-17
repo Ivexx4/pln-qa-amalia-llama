@@ -164,7 +164,31 @@ python main.py rag all --theme "Futebol" --limit 2 --run-id rag-ensaio
 python main.py rag all --theme "Futebol" --run-id rag-v1
 ```
 
-As fases podem ser corridas em separado (`index`, `retrieve`, `generate`, `judge`, `score`, `analyze`, `compare`) e são retomáveis. Parâmetros: `--top-k` (4), `--chunk-chars` (900), `--chunk-overlap` (150), `--embed-model`, `--store chroma|memory`, `--baseline` (por omissão, o `all_results.csv` de `principal-ptpt`). Resultados em `results/meta3/<run-id>/`: `recuperacao_por_pergunta.csv` e `recuperacao_resumo.csv` (hit@k, MRR e cobertura de tokens da resposta no contexto), as tabelas habituais da Meta 2 e, na pasta de análise, `comparacao_rag_vs_baseline.csv` (diferença RAG − baseline por modelo e métrica, IC bootstrap, McNemar/Wilcoxon) e `efeito_rag_por_pergunta.csv` (onde o RAG ajudou ou prejudicou, cruzado com a recuperação).
+As fases podem ser corridas em separado (`index`, `retrieve`, `generate`, `judge`, `score`, `analyze`, `compare`) e são retomáveis. Parâmetros do RAG: ver a secção seguinte; `--baseline` (por omissão, o `all_results.csv` de `principal-ptpt`). Resultados em `results/meta3/<run-id>/`: `recuperacao_por_pergunta.csv` e `recuperacao_resumo.csv` (hit@k, MRR e cobertura de tokens da resposta no contexto), as tabelas habituais da Meta 2 e, na pasta de análise, `comparacao_rag_vs_baseline.csv` (diferença RAG − baseline por modelo e métrica, IC bootstrap, McNemar/Wilcoxon) e `efeito_rag_por_pergunta.csv` (onde o RAG ajudou ou prejudicou, cruzado com a recuperação).
+
+### Configuração dos parâmetros
+
+Todos os parâmetros do RAG estão num único objeto (`RagSettings`, em `qa_pipeline/rag_settings.py`), validado ao ser criado. A precedência, da menor para a maior, é: valores por omissão < ficheiro `--config` < opções da CLI < `--set chave=valor`.
+
+| Parâmetro | Omissão | Afeta |
+|---|---|---|
+| `theme` | obrigatório | perguntas e corpus |
+| `models`, `judge_model` | AMALIA + Llama 3.1 8B; Qwen 2.5 7B | geração, juízo |
+| `embed_model` | `bge-m3:latest` | **índice** |
+| `chunk_chars`, `chunk_overlap` | 900, 150 | **índice** |
+| `top_k` | 4 | recuperação |
+| `min_score` | nenhum | recuperação (descarta excertos com cosseno abaixo do limiar) |
+| `store` | `chroma` | índice (`memory` = sem persistência) |
+| `prompt` | `default` | geração (`default` ou `estrito`, em `rag_prompts.py`) |
+
+Os parâmetros marcados como índice determinam a coleção ChromaDB (nome com hash do corpus e desses parâmetros), por isso variantes que só mudam `top_k`, `min_score` ou `prompt` reutilizam o mesmo índice sem recalcular embeddings. Sem `--run-id`, a execução chama-se `rag-<fingerprint>`, derivado dos parâmetros; o manifesto regista-os em `settings`.
+
+```bash
+python main.py rag all --config configs/rag/base.json --set top_k=6 --set min_score=0.4
+python main.py rag sweep --sweep configs/rag/sweep_chunks_topk.json --limit 5
+```
+
+`sweep` expande a grelha do ficheiro JSON (`{"name", "base", "grid": {parâmetro: [valores]}}`) em variantes, corre `index` até `analyze` para cada uma e escreve `results/meta3/<nome>-resumo.csv` com recuperação e métricas lado a lado. Os valores da grelha têm precedência sobre a CLI. Para acrescentar um parâmetro novo: campo em `RagSettings` (com validação), uso no módulo respetivo e, se mudar o índice, inclusão em `INDEX_FIELDS`. Para um prompt novo: entrada em `PROMPTS`.
 
 Limites a ter em conta: `hit@k` e `token_recall` são medidas lexicais (a resposta aparece no excerto), não provam que o excerto é relevante; com 20 perguntas por tema os IC são largos; o corpus e as sementes são escolhidos pelo autor, pelo que as sementes devem basear-se no tema e nas perguntas de treino, nunca nas de teste. A API do `chromadb` e as sementes iniciais não foram executadas contra o serviço real durante o desenvolvimento do código; validar com `--limit 2` antes da execução completa.
 

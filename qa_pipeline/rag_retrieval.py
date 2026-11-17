@@ -7,15 +7,19 @@ from . import cache, metrics, rag_embed
 
 
 class Retriever:
-    def __init__(self, store, embed_model: str, top_k: int, embed_fn=None):
+    def __init__(self, store, embed_model: str, top_k: int, embed_fn=None, min_score: float | None = None):
         self.store = store
         self.embed_model = embed_model
         self.top_k = top_k
+        self.min_score = min_score
         self._embed = embed_fn or (lambda texts: rag_embed.embed(embed_model, texts))
 
     def retrieve(self, question: str, top_k: int | None = None) -> list[dict]:
         vector = self._embed([question])[0]
-        return self.store.query(vector, top_k or self.top_k)
+        hits = self.store.query(vector, top_k or self.top_k)
+        if self.min_score is not None:
+            hits = [hit for hit in hits if hit["score"] >= self.min_score]
+        return hits
 
 
 def retrieve_all(df, retriever: Retriever, path) -> dict:

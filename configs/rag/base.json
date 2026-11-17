@@ -1,0 +1,12 @@
+{
+  "theme": "Futebol",
+  "models": ["teex/amalia:q4_K_M", "llama3.1:8b"],
+  "judge_model": "qwen2.5:7b",
+  "embed_model": "bge-m3:latest",
+  "chunk_chars": 900,
+  "chunk_overlap": 150,
+  "top_k": 4,
+  "min_score": null,
+  "store": "chroma",
+  "prompt": "default"
+}

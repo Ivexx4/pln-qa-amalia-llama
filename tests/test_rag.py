@@ -7,7 +7,8 @@ from unittest.mock import patch
 import numpy as np
 import pandas as pd
 
-from qa_pipeline import cache, rag_cli, rag_compare, rag_config, rag_corpus, rag_generation, rag_retrieval, rag_store
+from qa_pipeline import (cache, rag_cli, rag_compare, rag_config, rag_corpus, rag_generation, rag_retrieval,
+                         rag_settings, rag_store, rag_sweep)
 
 VOCAB = ["benfica", "porto", "sporting", "ronaldo", "messi", "madrid", "barcelona", "luz", "dragao", "alvalade"]
 
@@ -183,7 +184,8 @@ class CliTests(unittest.TestCase):
             (corpus_dir / "corpus.jsonl").write_text(json.dumps(docs[0], ensure_ascii=False) + "\n", encoding="utf-8")
             digests = {"m": "x", "j": "y", "e": "z"}
             args = ["all", "--theme", "Futebol", "--store", "memory", "--models", "m", "--judge-model", "j",
-                    "--embed-model", "e", "--limit", "2", "--output-dir", str(tmp / "res")]
+                    "--embed-model", "e", "--limit", "2", "--output-dir", str(tmp / "res"),
+                    "--run-id", "rag-v1"]
             with patch.object(rag_config, "RAG_DIR", tmp / "rag"), \
                  patch("qa_pipeline.rag_embed.embed", side_effect=lambda model, texts: fake_embed(texts)), \
                  patch("qa_pipeline.llm.model_digests", return_value=digests), \
@@ -201,6 +203,132 @@ class CliTests(unittest.TestCase):
     def test_unknown_theme_is_rejected(self):
         with self.assertRaises(SystemExit):
             rag_cli.main(["retrieve", "--theme", "Tema Inexistente"])
+
+
+class SettingsTests(unittest.TestCase):
+    def test_defaults_and_fingerprint_are_stable(self):
+        a, b = rag_settings.RagSettings(theme="Futebol"), rag_settings.RagSettings(theme="Futebol")
+        self.assertEqual(a.fingerprint(), b.fingerprint())
+        self.assertNotEqual(a.fingerprint(), rag_settings.with_changes(a, top_k=7).fingerprint())
+
+    def test_validation(self):
+        for bad in ({"top_k": 0}, {"chunk_overlap": 900}, {"min_score": 2.0}, {"store": "x"}, {"prompt": "x"},
+                    {"models": ("a", "a")}):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                rag_settings.RagSettings(theme="F", **bad)
+
+    def test_precedence_file_then_flags_then_set(self):
+        s = rag_settings.build_settings({"theme": "F", "top_k": 2, "min_score": 0.3}, {"top_k": 5},
+                                        rag_settings.parse_overrides(["top_k=6", "min_score=none", "models=a,b"]))
+        self.assertEqual((s.top_k, s.min_score, s.models), (6, None, ("a", "b")))
+
+    def test_unknown_parameter_and_missing_theme(self):
+        with self.assertRaises(ValueError):
+            rag_settings.build_settings({"theme": "F", "topk": 3})
+        with self.assertRaises(ValueError):
+            rag_settings.build_settings({"top_k": 3})
+
+    def test_index_params_ignore_retrieval_only_settings(self):
+        a = rag_settings.RagSettings(theme="F")
+        b = rag_settings.with_changes(a, top_k=9, prompt="estrito")
+        self.assertEqual(a.index_params(), b.index_params())
+        self.assertNotEqual(a.index_params(), rag_settings.with_changes(a, chunk_chars=500).index_params())
+
+
+class SweepTests(unittest.TestCase):
+    spec = {"name": "s", "base": {"theme": "F", "top_k": 4}, "grid": {"chunk_chars": [500, 900], "top_k": [1, 3]}}
+
+    def test_grid_expansion_names_and_precedence(self):
+        variants = rag_sweep.expand_sweep(self.spec, upper=[{"min_score": 0.5, "top_k": 8}])
+        self.assertEqual(len(variants), 4)
+        self.assertEqual(variants[0][0], "chunk_chars-500_top_k-1")
+        self.assertTrue(all(s.min_score == 0.5 for _, s in variants))  # CLI acima da base
+        self.assertEqual(sorted({s.top_k for _, s in variants}), [1, 3])  # grelha acima da CLI
+
+    def test_grid_allows_null_values_and_rejects_empty(self):
+        variants = rag_sweep.expand_sweep({"base": {"theme": "F"}, "grid": {"min_score": [None, 0.4]}})
+        self.assertEqual([s.min_score for _, s in variants], [None, 0.4])
+        with self.assertRaises(ValueError):
+            rag_sweep.expand_sweep({"base": {"theme": "F"}, "grid": {"top_k": []}})
+
+    def test_summarize_variant_reads_retrieval_and_results(self):
+        settings = rag_settings.RagSettings(theme="F")
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp)
+            pd.DataFrame([{"grupo": "todas", "n": 2, "hit@1": 0.5, "mrr": 0.5, "token_recall": 0.7}]) \
+                .to_csv(folder / "recuperacao_resumo.csv", index=False)
+            rows = rag_sweep.summarize_variant("v", settings, folder)
+            self.assertEqual(len(rows), 1)
+            self.assertEqual(rows[0]["hit@1"], 0.5)
+            pd.DataFrame({"Modelo": ["m", "m"], "Judge": [1, 0], "Contains": [1, 1], "ROUGE_L": [0.5, 0.5],
+                          "BERTScore_F1": [0.9, 0.7]}).to_csv(folder / "all_results.csv", index=False)
+            rows = rag_sweep.summarize_variant("v", settings, folder)
+            self.assertEqual((rows[0]["Modelo"], rows[0]["Judge"], rows[0]["n_perguntas"]), ("m", 0.5, 2))
+
+
+class MinScoreAndPromptTests(unittest.TestCase):
+    def test_min_score_filters_hits(self):
+        store = rag_store.MemoryStore()
+        chunks = [{"chunk_id": f"c{i}", "doc_id": "d", "title": t, "section": "", "url": "", "text": t}
+                  for i, t in enumerate(["benfica", "porto"])]
+        rag_store.build_index(store, chunks, fake_embed([c["text"] for c in chunks]))
+        loose = rag_retrieval.Retriever(store, "m", 2, embed_fn=fake_embed)
+        strict = rag_retrieval.Retriever(store, "m", 2, embed_fn=fake_embed, min_score=0.9)
+        self.assertEqual(len(loose.retrieve("benfica")), 2)
+        self.assertEqual([h["chunk_id"] for h in strict.retrieve("benfica")], ["c0"])
+
+    def test_prompt_variant_is_used(self):
+        df = pd.DataFrame([{"id": "a", "Pergunta": "Quem?"}])
+        with tempfile.TemporaryDirectory() as tmp, patch("qa_pipeline.llm.chat", return_value="x") as chat:
+            rag_generation.generate_rag(df, ["m"], {"a": {"hits": [{"text": "T"}]}}, Path(tmp), prompt="estrito")
+            self.assertIn("Não sei", chat.call_args.args[1][0]["content"])
+
+
+class ConfigCliTests(unittest.TestCase):
+    def test_default_run_id_uses_fingerprint_and_config_file(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            cfg = tmp / "c.json"
+            cfg.write_text(json.dumps({"theme": "Futebol", "top_k": 2, "models": ["m"], "judge_model": "j",
+                                       "embed_model": "e", "store": "memory"}), encoding="utf-8")
+            corpus_dir = tmp / "rag" / "futebol"
+            corpus_dir.mkdir(parents=True)
+            doc = {**DOC, "text": rag_corpus.strip_sections(DOC["text"])}
+            (corpus_dir / "corpus.jsonl").write_text(json.dumps(doc, ensure_ascii=False) + "\n", encoding="utf-8")
+            args = ["retrieve", "--config", str(cfg), "--set", "top_k=3", "--limit", "1",
+                    "--output-dir", str(tmp / "res")]
+            expected = rag_settings.build_settings(rag_settings.load_config_file(cfg), {"top_k": 3}).fingerprint()
+            with patch.object(rag_config, "RAG_DIR", tmp / "rag"), \
+                 patch("qa_pipeline.rag_embed.embed", side_effect=lambda model, texts: fake_embed(texts)), \
+                 patch("qa_pipeline.llm.model_digests", return_value={"m": "1", "j": "2", "e": "3"}):
+                rag_cli.main(args)
+            run = tmp / "res" / "meta3" / f"rag-{expected}"
+            self.assertEqual(len((run / "retrieval.jsonl").read_text().splitlines()), 1)
+            manifest = json.loads((run / "manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(manifest["settings"]["top_k"], 3)
+
+    def test_sweep_runs_each_variant_and_writes_summary(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            sweep = tmp / "sw.json"
+            sweep.write_text(json.dumps({"name": "t", "base": {"theme": "Futebol", "models": ["m"],
+                                                               "judge_model": "j", "embed_model": "e",
+                                                               "store": "memory"},
+                                         "grid": {"top_k": [1, 2]}}), encoding="utf-8")
+            corpus_dir = tmp / "rag" / "futebol"
+            corpus_dir.mkdir(parents=True)
+            doc = {**DOC, "text": rag_corpus.strip_sections(DOC["text"])}
+            (corpus_dir / "corpus.jsonl").write_text(json.dumps(doc, ensure_ascii=False) + "\n", encoding="utf-8")
+            with patch.object(rag_config, "RAG_DIR", tmp / "rag"), \
+                 patch("qa_pipeline.rag_embed.embed", side_effect=lambda model, texts: fake_embed(texts)), \
+                 patch("qa_pipeline.llm.model_digests", return_value={"m": "1", "j": "2", "e": "3"}), \
+                 patch("qa_pipeline.llm.chat", return_value="x"), \
+                 patch("qa_pipeline.rag_cli.judge"), patch("qa_pipeline.rag_cli.score"), \
+                 patch("qa_pipeline.rag_cli.analyze"):
+                rag_cli.main(["sweep", "--sweep", str(sweep), "--limit", "2", "--output-dir", str(tmp / "res")])
+            summary = pd.read_csv(tmp / "res" / "meta3" / "t-resumo.csv")
+            self.assertEqual(summary["top_k"].tolist(), [1, 2])
+            self.assertTrue((tmp / "res" / "meta3" / "t-top_k-1" / "manifest.json").is_file())
 
 
 if __name__ == "__main__":

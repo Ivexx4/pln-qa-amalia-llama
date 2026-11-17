@@ -1,0 +1,8 @@
+{
+  "name": "chunks-topk",
+  "base": {"theme": "Futebol"},
+  "grid": {
+    "chunk_chars": [500, 900],
+    "top_k": [1, 3, 5]
+  }
+}
