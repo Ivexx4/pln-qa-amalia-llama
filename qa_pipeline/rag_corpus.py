@@ -6,6 +6,7 @@ import json
 import re
 import time
 import unicodedata
+from collections import Counter
 from datetime import date
 from pathlib import Path
 
@@ -94,8 +95,51 @@ def fetch_article(session: requests.Session, title: str) -> dict | None:
             "text": text}
 
 
-def build_corpus(theme: str, seeds: list[str], out_dir: Path, pause: float | None = None) -> list[dict]:
-    """Descarrega os artigos, guarda corpus.jsonl e fontes.csv e devolve os documentos."""
+# Títulos de ligações sem prosa útil: anos, séculos, listas e anexos.
+LINK_SKIP = re.compile(r"\d{1,4}( a\.C\.)?|séc(ulo|\.) .*|lista de .*|anexo:.*|\d{1,2} de [a-zç]+", re.IGNORECASE)
+
+
+def fetch_links(session: requests.Session, title: str, pause: float = 0.0) -> list[str]:
+    """Títulos dos artigos (espaço principal) para onde a página `title` tem ligações."""
+    links: list[str] = []
+    cont: dict = {}
+    while True:
+        data = _wiki_get(session, {"action": "query", "prop": "links", "pllimit": "max",
+                                   "plnamespace": 0, "redirects": 1, "titles": title, **cont})
+        pages = data.get("query", {}).get("pages", [])
+        if pages:
+            links.extend(item["title"] for item in pages[0].get("links", []))
+        cont = data.get("continue") or {}
+        if not cont:
+            return links
+        time.sleep(pause)
+
+
+def rank_link_candidates(link_map: dict[str, list[str]], exclude: set[str],
+                         min_links: int = 2) -> list[tuple[str, int]]:
+    """Ordena os artigos ligados por quantas páginas-semente os referem (desc.) e depois por título.
+
+    Só entram os referidos por pelo menos `min_links` sementes, fora os já presentes e os títulos
+    sem prosa (anos, séculos, listas). A ordenação é determinística.
+    """
+    excluded = {title.casefold() for title in exclude}
+    counts: Counter = Counter()
+    for links in link_map.values():
+        counts.update(set(links))
+    ranked = [(title, n) for title, n in counts.items()
+              if n >= min_links and title.casefold() not in excluded and not LINK_SKIP.fullmatch(title)]
+    return sorted(ranked, key=lambda item: (-item[1], item[0]))
+
+
+def build_corpus(theme: str, seeds: list[str], out_dir: Path, pause: float | None = None,
+                 expand_links: bool = False, max_links: int = 10, min_links: int = 2) -> list[dict]:
+    """Descarrega os artigos, guarda corpus.jsonl e fontes.csv e devolve os documentos.
+
+    Com `expand_links`, acrescenta até `max_links` artigos que as páginas-semente referem por ligação
+    (os mais referidos, com pelo menos `min_links` sementes a ligar para eles). Esses documentos recebem
+    os identificadores seguintes aos das sementes e ficam marcados com origin="ligacao"; a lista fica em
+    links_expandidos.txt para poderes revê-la e promovê-la a sementes.
+    """
     pause = rag_config.WIKI_PAUSE_SECONDS if pause is None else pause
     session = requests.Session()
     session.headers["User-Agent"] = rag_config.WIKI_USER_AGENT
@@ -108,42 +152,82 @@ def build_corpus(theme: str, seeds: list[str], out_dir: Path, pause: float | Non
         titles.extend(found)
         time.sleep(pause)
 
+    out_dir.mkdir(parents=True, exist_ok=True)
     cache_dir = out_dir / "_cache"
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    docs, seen, missing = [], set(), []
-    for title in titles:
+    (cache_dir / "links").mkdir(parents=True, exist_ok=True)
+
+    def load_article(title: str) -> dict | None:
         cached = cache_dir / f"{slugify(title)}.json"
         if cached.is_file():  # já descarregado numa execução anterior
-            article = json.loads(cached.read_text(encoding="utf-8")) or None
-        else:
-            article = fetch_article(session, title)
-            cached.write_text(json.dumps(article, ensure_ascii=False), encoding="utf-8")
-            time.sleep(pause)
-        if article is None:
-            missing.append(title)
-            continue
-        if article["title"] in seen:
-            continue
+            return json.loads(cached.read_text(encoding="utf-8")) or None
+        article = fetch_article(session, title)
+        cached.write_text(json.dumps(article, ensure_ascii=False), encoding="utf-8")
+        time.sleep(pause)
+        return article
+
+    def add_doc(article: dict) -> None:
         seen.add(article["title"])
         article["doc_id"] = f"d{len(docs):03d}"
         article["theme"] = theme
         article["retrieved"] = date.today().isoformat()
         docs.append(article)
+
+    docs, seen, missing = [], set(), []
+    for title in titles:
+        article = load_article(title)
+        if article is None:
+            missing.append(title)
+            continue
+        if article["title"] in seen:
+            continue
+        add_doc(article)
     if missing:
         print("Aviso: artigos não encontrados (corrigir o ficheiro de sementes): " + "; ".join(missing))
     if not docs:
         raise ValueError("Nenhum documento foi recolhido.")
 
-    out_dir.mkdir(parents=True, exist_ok=True)
+    if expand_links and max_links > 0:
+        n_seeds = len(docs)
+        link_map: dict[str, list[str]] = {}
+        for doc in docs[:n_seeds]:
+            cached = cache_dir / "links" / f"{slugify(doc['title'])}.json"
+            if cached.is_file():
+                link_map[doc["title"]] = json.loads(cached.read_text(encoding="utf-8"))
+            else:
+                link_map[doc["title"]] = fetch_links(session, doc["title"], pause)
+                cached.write_text(json.dumps(link_map[doc["title"]], ensure_ascii=False), encoding="utf-8")
+                time.sleep(pause)
+        candidates = rank_link_candidates(link_map, set(titles) | seen, min_links)
+        added: list[tuple[str, int]] = []
+        for title, count in candidates[:max_links * 5]:  # margem para redirecionamentos/inexistentes
+            if len(added) >= max_links:
+                break
+            article = load_article(title)
+            if article is None or article["title"] in seen:
+                continue
+            article["origin"] = "ligacao"
+            article["linked_from"] = count
+            add_doc(article)
+            added.append((article["title"], count))
+        with (out_dir / "links_expandidos.txt").open("w", encoding="utf-8") as stream:
+            stream.write("# Artigos acrescentados por --expand-links (título <TAB> nº de sementes que ligam para ele).\n"
+                         "# Para os fixar, copiar os títulos para seeds.txt.\n")
+            for title, count in added:
+                stream.write(f"{title}\t{count}\n")
+        print(f"Expansão por ligações: +{len(added)} artigos "
+              f"(candidatos com >= {min_links} sementes a ligar: {len(candidates)}).")
+        for title, count in added:
+            print(f"  + {title} ({count} sementes)")
+
     with (out_dir / "corpus.jsonl").open("w", encoding="utf-8") as stream:
         for doc in docs:
             stream.write(json.dumps(doc, ensure_ascii=False) + "\n")
     with (out_dir / "fontes.csv").open("w", encoding="utf-8", newline="") as stream:
         writer = csv.writer(stream)
-        writer.writerow(["doc_id", "titulo", "url", "revisao", "recolhido_em", "caracteres"])
+        writer.writerow(["doc_id", "titulo", "url", "revisao", "recolhido_em", "caracteres", "origem"])
         for doc in docs:
             writer.writerow([doc["doc_id"], doc["title"], doc["url"], doc["revision"],
-                             doc["retrieved"], len(doc["text"])])
+                             doc["retrieved"], len(doc["text"]), doc.get("origin", "semente")])
     print(f"{len(docs)} documentos guardados em {out_dir}")
     return docs
 

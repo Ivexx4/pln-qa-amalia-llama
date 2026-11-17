@@ -158,6 +158,10 @@ python -m pip install -r requirements.txt
 
 # 1. Recolher o corpus (rede). Rever data/rag/<tema>/seeds.txt; o comando avisa dos títulos não encontrados.
 python main.py rag corpus --theme "Cibersegurança"
+# Opcional: acrescentar artigos referidos por ligação nas páginas-semente (os mais referidos, por ordem).
+# --max-links: máximo de artigos acrescentados (10); --min-links: nº mínimo de sementes que ligam para ele (2).
+# A lista fica em data/rag/<tema>/links_expandidos.txt; para a fixar, copiar os títulos para seeds.txt.
+python main.py rag corpus --theme "Cibersegurança" --expand-links --max-links 10 --min-links 2
 
 # 2. Ensaio com 2 perguntas e depois a experiência completa do tema (índice, recuperação, geração, juiz, métricas, comparação)
 python main.py rag all --theme "Cibersegurança" --limit 2 --run-id rag-ensaio

@@ -20,6 +20,7 @@ models/
 
 # RAG (Meta 3): o índice vetorial é regenerável; versionar corpus e fontes.
 data/rag/**/chroma/
+data/rag/**/_cache/
 !results/meta3/**/
 !results/meta3/**/manifest.json
 !results/meta3/**/all_results.csv
@@ -27,3 +28,4 @@ data/rag/**/chroma/
 !results/meta3/**/recuperacao_*.csv
 !results/meta3/**/comparacao_*.csv
 !results/meta3/**/efeito_*.csv
+*.patch

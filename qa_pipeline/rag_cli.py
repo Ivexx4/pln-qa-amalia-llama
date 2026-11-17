@@ -52,6 +52,12 @@ def build_parser() -> argparse.ArgumentParser:
     group.add_argument("--prompt", choices=sorted(PROMPTS))
     ap.add_argument("--sweep", type=Path, help="ficheiro JSON da grelha (fase sweep)")
     ap.add_argument("--seeds", type=Path, help="sementes do corpus (por omissão data/rag/<tema>/seeds.txt)")
+    ap.add_argument("--expand-links", action="store_true",
+                    help="fase corpus: acrescenta artigos referidos por ligação nas páginas-semente")
+    ap.add_argument("--max-links", type=int, default=10,
+                    help="fase corpus: máximo de artigos acrescentados por --expand-links (por omissão 10)")
+    ap.add_argument("--min-links", type=int, default=2,
+                    help="fase corpus: nº mínimo de sementes que têm de ligar para um artigo (por omissão 2)")
     ap.add_argument("--bert-model", default=config.DEFAULT_BERT_MODEL)
     ap.add_argument("--bert-num-layers", type=int)
     ap.add_argument("--bert-batch-size", type=int, default=config.DEFAULT_BERTSCORE_BATCH_SIZE)
@@ -224,6 +230,8 @@ def main(argv=None) -> None:
         parser.error("--run-id deve conter apenas letras, números, pontos, hífen ou sublinhado")
     if args.limit < 0:
         parser.error("--limit deve ser não negativo")
+    if args.max_links < 0 or args.min_links < 1:
+        parser.error("--max-links deve ser não negativo e --min-links pelo menos 1")
     try:
         layers = cli_layers(args)
         if args.stage == "sweep":
@@ -233,7 +241,8 @@ def main(argv=None) -> None:
         if args.stage == "corpus":
             folder = rag_corpus.theme_dir(settings.theme)
             rag_corpus.build_corpus(settings.theme, rag_corpus.read_seeds(args.seeds or folder / "seeds.txt"),
-                                    folder)
+                                    folder, expand_links=args.expand_links, max_links=args.max_links,
+                                    min_links=args.min_links)
             return
         run_id = args.run_id or f"rag-{settings.fingerprint()}"
         stages = ALL_STAGES if args.stage == "all" else [args.stage]
