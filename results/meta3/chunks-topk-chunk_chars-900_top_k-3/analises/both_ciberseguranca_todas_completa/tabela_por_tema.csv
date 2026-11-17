@@ -1,0 +1,3 @@
+Tema,Modelo,n_respostas,EM,Contains,ROUGE_L,BERTScore_F1,Judge,n_EM,n_Contains,n_ROUGE_L,n_BERTScore_F1,n_Judge
+Cibersegurança,llama3.1:8b,20,0.1,0.15,0.31,0.714,0.8,20,20,20,20,20
+Cibersegurança,teex/amalia:q4_K_M,20,0.1,0.15,0.323,0.726,0.8,20,20,20,20,20

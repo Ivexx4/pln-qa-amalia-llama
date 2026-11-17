@@ -1,0 +1,11 @@
+Modelo,metrica,n,sem_rag,com_rag,diferenca,ic_95_inferior,ic_95_superior,teste,p_valor,so_rag_certo,so_baseline_certo
+llama3.1:8b,EM,20,0.1,0.05,-0.05,-0.2,0.1,,,,
+llama3.1:8b,Contains,20,0.25,0.15,-0.1,-0.25,0.0,McNemar exato,0.5,0.0,2.0
+llama3.1:8b,ROUGE_L,20,0.245,0.2882,0.0433,-0.1088,0.2028,Wilcoxon,0.8408,,
+llama3.1:8b,BERTScore_F1,20,0.6914,0.7022,0.0108,-0.0421,0.0634,Wilcoxon,0.8983,,
+llama3.1:8b,Judge,20,0.75,0.65,-0.1,-0.35,0.2,McNemar exato,0.7266,3.0,5.0
+teex/amalia:q4_K_M,EM,20,0.15,0.05,-0.1,-0.25,0.0,,,,
+teex/amalia:q4_K_M,Contains,20,0.25,0.1,-0.15,-0.3,0.0,McNemar exato,0.25,0.0,3.0
+teex/amalia:q4_K_M,ROUGE_L,20,0.4231,0.2747,-0.1483,-0.2769,-0.0405,Wilcoxon,0.0311,,
+teex/amalia:q4_K_M,BERTScore_F1,20,0.7613,0.6947,-0.0667,-0.1216,-0.0186,Wilcoxon,0.0441,,
+teex/amalia:q4_K_M,Judge,20,0.95,0.7,-0.25,-0.45,-0.05,McNemar exato,0.0625,0.0,5.0

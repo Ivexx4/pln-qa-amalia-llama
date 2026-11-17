@@ -1,0 +1,3 @@
+Modelo,n_respostas,EM,Contains,ROUGE_L,BERTScore_F1,Judge,n_EM,n_Contains,n_ROUGE_L,n_BERTScore_F1,n_Judge
+llama3.1:8b,20,0.05,0.15,0.283,0.697,0.75,20,20,20,20,20
+teex/amalia:q4_K_M,20,0.05,0.1,0.302,0.719,0.7,20,20,20,20,20

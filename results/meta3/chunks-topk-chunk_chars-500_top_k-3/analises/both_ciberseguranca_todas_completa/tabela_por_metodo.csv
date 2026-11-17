@@ -1,0 +1,5 @@
+Metodo,Modelo,n_respostas,EM,Contains,ROUGE_L,BERTScore_F1,Judge,n_EM,n_Contains,n_ROUGE_L,n_BERTScore_F1,n_Judge
+HUM,llama3.1:8b,12,0.167,0.25,0.345,0.747,0.75,12,12,12,12,12
+HUM,teex/amalia:q4_K_M,12,0.167,0.25,0.31,0.702,0.75,12,12,12,12,12
+LLM,llama3.1:8b,8,0.0,0.0,0.205,0.677,0.75,8,8,8,8,8
+LLM,teex/amalia:q4_K_M,8,0.0,0.0,0.256,0.723,0.75,8,8,8,8,8

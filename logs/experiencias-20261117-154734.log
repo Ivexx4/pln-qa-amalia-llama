@@ -1,0 +1,152 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261117154734
+Username: IVO_ROSA\ivoro
+RunAs User: IVO_ROSA\ivoro
+Configuration Name: 
+Machine: IVO_ROSA (Microsoft Windows NT 10.0.26200.0)
+Host Application: powershell.exe -NoExit -ExecutionPolicy Bypass -File C:\Program Files\JetBrains\IntelliJ IDEA OSS\plugins\terminal\shell-integrations\powershell\powershell-integration.ps1
+Process ID: 74348
+PSVersion: 5.1.26100.9818
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9818
+BuildVersion: 10.0.26100.9818
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+
+=== sweep_chunks_topk ===
+rag sweep --theme Cibersegurança --sweep configs\rag\sweep_chunks_topk.json
+      0.10    0.302         0.719
+chunk_chars-900_top_k-3    27f8276f Cibersegurança bge-m3:latest          900            150      3
+   None chroma default           20   0.20   0.25   0.25 0.225         0.641        llama3.1:8b   0.80
+      0.15    0.310         0.714
+chunk_chars-900_top_k-3    27f8276f Cibersegurança bge-m3:latest          900            150      3
+   None chroma default           20   0.20   0.25   0.25 0.225         0.641 teex/amalia:q4_K_M   0.80
+      0.15    0.323         0.726
+chunk_chars-900_top_k-5    d986bfce Cibersegurança bge-m3:latest          900            150      5
+   None chroma default           20   0.20   0.25   0.25 0.225         0.684        llama3.1:8b   0.85
+      0.15    0.314         0.722
+chunk_chars-900_top_k-5    d986bfce Cibersegurança bge-m3:latest          900            150      5
+   None chroma default           20   0.20   0.25   0.25 0.225         0.684 teex/amalia:q4_K_M   0.85
+      0.15    0.364         0.741
+-> OK em 26:25 (código 0)
+
+=== sweep_prompt_minscore ===
+rag sweep --theme Cibersegurança --sweep configs\rag\sweep_prompt_minscore.json
+
+-> FALHOU em 00:04 (código 1)
+
+=== sweep_overlap ===
+rag sweep --theme Cibersegurança --sweep configs\rag\sweep_overlap.json
+
+-> OK em 08:03 (código 0)
+Corpus expandido (5) reposto de data\rag\ciberseguranca\corpus.expandido-5.jsonl
+
+=== all corpus-expandido-5 ===
+rag all --theme Cibersegurança --run-id corpus-expandido-5
+
+-> OK em 04:29 (código 0)
+Corpus expandido (10) reposto de data\rag\ciberseguranca\corpus.expandido-10.jsonl
+
+=== all corpus-expandido-10 ===
+rag all --theme Cibersegurança --run-id corpus-expandido-10
+
+-> OK em 04:29 (código 0)
+Corpus expandido (20) reposto de data\rag\ciberseguranca\corpus.expandido-20.jsonl
+
+=== all corpus-expandido-20 ===
+rag all --theme Cibersegurança --run-id corpus-expandido-20
+
+-> OK em 04:42 (código 0)
+Corpus das sementes reposto.
+
+=== comparar chunks-topk-chunk_chars-500_top_k-1 ===
+rag compare --theme Cibersegurança --run-id chunks-topk-chunk_chars-500_top_k-1
+
+-> OK em 00:03 (código 0)
+
+=== comparar chunks-topk-chunk_chars-500_top_k-3 ===
+rag compare --theme Cibersegurança --run-id chunks-topk-chunk_chars-500_top_k-3
+
+-> OK em 00:02 (código 0)
+
+=== comparar chunks-topk-chunk_chars-500_top_k-5 ===
+rag compare --theme Cibersegurança --run-id chunks-topk-chunk_chars-500_top_k-5
+
+-> OK em 00:02 (código 0)
+
+=== comparar chunks-topk-chunk_chars-900_top_k-1 ===
+rag compare --theme Cibersegurança --run-id chunks-topk-chunk_chars-900_top_k-1
+
+-> OK em 00:02 (código 0)
+
+=== comparar chunks-topk-chunk_chars-900_top_k-3 ===
+rag compare --theme Cibersegurança --run-id chunks-topk-chunk_chars-900_top_k-3
+
+-> OK em 00:02 (código 0)
+
+=== comparar chunks-topk-chunk_chars-900_top_k-5 ===
+rag compare --theme Cibersegurança --run-id chunks-topk-chunk_chars-900_top_k-5
+
+-> OK em 00:02 (código 0)
+
+=== comparar corpus-expandido-10 ===
+rag compare --theme Cibersegurança --run-id corpus-expandido-10
+
+-> OK em 00:02 (código 0)
+
+=== comparar corpus-expandido-20 ===
+rag compare --theme Cibersegurança --run-id corpus-expandido-20
+
+-> OK em 00:02 (código 0)
+
+=== comparar corpus-expandido-5 ===
+rag compare --theme Cibersegurança --run-id corpus-expandido-5
+
+-> OK em 00:02 (código 0)
+
+=== comparar overlap-chunk_overlap-0 ===
+rag compare --theme Cibersegurança --run-id overlap-chunk_overlap-0
+
+-> OK em 00:02 (código 0)
+
+=== comparar overlap-chunk_overlap-300 ===
+rag compare --theme Cibersegurança --run-id overlap-chunk_overlap-300
+
+-> OK em 00:02 (código 0)
+
+=== consolidar ===
+
+
+================ RESUMO (00:48:47) ================
+
+Passo                                        Estado Duracao
+-----                                        ------ -------
+sweep_chunks_topk                            OK     00:26:25
+sweep_prompt_minscore                        FALHOU 00:00:04
+sweep_overlap                                OK     00:08:03
+all corpus-expandido-5                       OK     00:04:29
+all corpus-expandido-10                      OK     00:04:29
+all corpus-expandido-20                      OK     00:04:42
+comparar chunks-topk-chunk_chars-500_top_k-1 OK     00:00:03
+comparar chunks-topk-chunk_chars-500_top_k-3 OK     00:00:02
+comparar chunks-topk-chunk_chars-500_top_k-5 OK     00:00:02
+comparar chunks-topk-chunk_chars-900_top_k-1 OK     00:00:02
+comparar chunks-topk-chunk_chars-900_top_k-3 OK     00:00:02
+comparar chunks-topk-chunk_chars-900_top_k-5 OK     00:00:02
+comparar corpus-expandido-10                 OK     00:00:02
+comparar corpus-expandido-20                 OK     00:00:02
+comparar corpus-expandido-5                  OK     00:00:02
+comparar overlap-chunk_overlap-0             OK     00:00:02
+comparar overlap-chunk_overlap-300           OK     00:00:02
+consolidar                                   OK
+
+
+18 passos, 1 falhas.
+**********************
+Windows PowerShell transcript end
+End time: 20261117163621
+**********************

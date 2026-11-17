@@ -1,0 +1,11 @@
+Tema,Modelo,metrica,n_tema,n,aviso,media,ic_95_inferior,ic_95_superior
+Cibersegurança,llama3.1:8b,EM,20,20,n<30,0.05,0.0,0.15
+Cibersegurança,teex/amalia:q4_K_M,EM,20,20,n<30,0.1,0.0,0.25
+Cibersegurança,llama3.1:8b,Contains,20,20,n<30,0.15,0.0,0.3
+Cibersegurança,teex/amalia:q4_K_M,Contains,20,20,n<30,0.15,0.0,0.3
+Cibersegurança,llama3.1:8b,ROUGE_L,20,20,n<30,0.2672894157154477,0.14979131666918086,0.4056518066243371
+Cibersegurança,teex/amalia:q4_K_M,ROUGE_L,20,20,n<30,0.30654301530182654,0.18445158669613015,0.44551650434848467
+Cibersegurança,llama3.1:8b,BERTScore_F1,20,20,n<30,0.699824412,0.6504729878250001,0.7554119222
+Cibersegurança,teex/amalia:q4_K_M,BERTScore_F1,20,20,n<30,0.7242007439999999,0.6732847986499999,0.777664173875
+Cibersegurança,llama3.1:8b,Judge,20,20,n<30,0.9,0.75,1.0
+Cibersegurança,teex/amalia:q4_K_M,Judge,20,20,n<30,0.85,0.7,1.0

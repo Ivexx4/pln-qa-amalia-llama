@@ -1,0 +1,16 @@
+tipo,metrica,modelo,modelo_comparado,n,estimativa,ic_95_inferior,ic_95_superior,teste,estatistica,p_valor,discordantes_amalia,discordantes_outro
+media,EM,llama3.1:8b,,20,0.1,0.0,0.25,,,,,
+media,EM,teex/amalia:q4_K_M,,20,0.1,0.0,0.25,,,,,
+diferenca,EM,teex/amalia:q4_K_M,llama3.1:8b,20,0.0,-0.15,0.15,,,,,
+media,Contains,llama3.1:8b,,20,0.15,0.0,0.3,,,,,
+media,Contains,teex/amalia:q4_K_M,,20,0.15,0.0,0.3,,,,,
+diferenca,Contains,teex/amalia:q4_K_M,llama3.1:8b,20,0.0,-0.15,0.15,McNemar exato,1.0,1.0,1.0,1.0
+media,ROUGE_L,llama3.1:8b,,20,0.3104373167236031,0.1889222477964917,0.45524684243619407,,,,,
+media,ROUGE_L,teex/amalia:q4_K_M,,20,0.32308876104220813,0.20290821051258642,0.46407572602406194,,,,,
+diferenca,ROUGE_L,teex/amalia:q4_K_M,llama3.1:8b,20,0.01265144431860501,-0.12258848433591939,0.12104544379560614,Wilcoxon,40.0,0.25598851167013814,,
+media,BERTScore_F1,llama3.1:8b,,20,0.7143083969999999,0.6627819295500001,0.7729383249749999,,,,,
+media,BERTScore_F1,teex/amalia:q4_K_M,,20,0.7257075374999999,0.6774069394250001,0.7762944322249999,,,,,
+diferenca,BERTScore_F1,teex/amalia:q4_K_M,llama3.1:8b,20,0.011399140500000016,-0.04117589641249998,0.05423092405000001,Wilcoxon,59.0,0.24846555845586238,,
+media,Judge,llama3.1:8b,,20,0.8,0.6,0.95,,,,,
+media,Judge,teex/amalia:q4_K_M,,20,0.8,0.6,0.95,,,,,
+diferenca,Judge,teex/amalia:q4_K_M,llama3.1:8b,20,0.0,0.0,0.0,McNemar exato,0.0,1.0,0.0,0.0

@@ -1,0 +1,134 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261117141453
+Username: IVO_ROSA\ivoro
+RunAs User: IVO_ROSA\ivoro
+Configuration Name: 
+Machine: IVO_ROSA (Microsoft Windows NT 10.0.26200.0)
+Host Application: powershell.exe -NoExit -ExecutionPolicy Bypass -File C:\Program Files\JetBrains\IntelliJ IDEA OSS\plugins\terminal\shell-integrations\powershell\powershell-integration.ps1
+Process ID: 74348
+PSVersion: 5.1.26100.9818
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9818
+BuildVersion: 10.0.26100.9818
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+
+=== sweep_chunks_topk ===
+rag sweep --theme Cibersegurança --sweep configs\rag\sweep_chunks_topk.json
+    return self._client._count(
+           ~~~~~~~~~~~~~~~~~~~^
+        collection_id=self.id,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        read_level=read_level,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ivoro\OneDrive\Ambiente de Trabalho\LECD\3º Ano\PLN\.venv\Lib\site-packages\chromadb\api\rust.py", line 397, in _count
+    return self.bindings.count(str(collection_id), tenant, database)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+chromadb.errors.InternalError: Error executing plan: Error sending backfill request to compactor: Error constructing hnsw segment reader: Error creating hnsw segment reader: Error loading hnsw index
+-> FALHOU em 13:33 (código 1)
+
+=== sweep_prompt_minscore ===
+rag sweep --theme Cibersegurança --sweep configs\rag\sweep_prompt_minscore.json
+
+-> FALHOU em 00:15 (código 1)
+
+=== sweep_overlap ===
+rag sweep --theme Cibersegurança --sweep configs\rag\sweep_overlap.json
+
+-> OK em 20:36 (código 0)
+Corpus expandido (5) reposto de data\rag\ciberseguranca\corpus.expandido-5.jsonl
+
+=== all corpus-expandido-5 ===
+rag all --theme Cibersegurança --run-id corpus-expandido-5
+
+-> OK em 04:18 (código 0)
+Corpus expandido (10) reposto de data\rag\ciberseguranca\corpus.expandido-10.jsonl
+
+=== all corpus-expandido-10 ===
+rag all --theme Cibersegurança --run-id corpus-expandido-10
+
+-> OK em 04:32 (código 0)
+Corpus expandido (20) reposto de data\rag\ciberseguranca\corpus.expandido-20.jsonl
+
+=== all corpus-expandido-20 ===
+rag all --theme Cibersegurança --run-id corpus-expandido-20
+
+-> OK em 04:47 (código 0)
+Corpus das sementes reposto.
+
+=== comparar chunks-topk-chunk_chars-500_top_k-1 ===
+rag compare --theme Cibersegurança --run-id chunks-topk-chunk_chars-500_top_k-1
+
+-> OK em 00:02 (código 0)
+
+=== comparar chunks-topk-chunk_chars-500_top_k-3 ===
+rag compare --theme Cibersegurança --run-id chunks-topk-chunk_chars-500_top_k-3
+
+-> OK em 00:02 (código 0)
+
+=== comparar chunks-topk-chunk_chars-500_top_k-5 ===
+rag compare --theme Cibersegurança --run-id chunks-topk-chunk_chars-500_top_k-5
+
+-> OK em 00:02 (código 0)
+
+=== comparar corpus-expandido-10 ===
+rag compare --theme Cibersegurança --run-id corpus-expandido-10
+
+-> OK em 00:02 (código 0)
+
+=== comparar corpus-expandido-20 ===
+rag compare --theme Cibersegurança --run-id corpus-expandido-20
+
+-> OK em 00:02 (código 0)
+
+=== comparar corpus-expandido-5 ===
+rag compare --theme Cibersegurança --run-id corpus-expandido-5
+
+-> OK em 00:02 (código 0)
+
+=== comparar overlap-chunk_overlap-0 ===
+rag compare --theme Cibersegurança --run-id overlap-chunk_overlap-0
+
+-> OK em 00:02 (código 0)
+
+=== comparar overlap-chunk_overlap-300 ===
+rag compare --theme Cibersegurança --run-id overlap-chunk_overlap-300
+
+-> OK em 00:02 (código 0)
+
+=== consolidar ===
+
+
+================ RESUMO (00:48:25) ================
+
+Passo                                        Estado Duracao
+-----                                        ------ -------
+sweep_chunks_topk                            FALHOU 00:13:33
+sweep_prompt_minscore                        FALHOU 00:00:15
+sweep_overlap                                OK     00:20:36
+all corpus-expandido-5                       OK     00:04:18
+all corpus-expandido-10                      OK     00:04:32
+all corpus-expandido-20                      OK     00:04:47
+comparar chunks-topk-chunk_chars-500_top_k-1 OK     00:00:02
+comparar chunks-topk-chunk_chars-500_top_k-3 OK     00:00:02
+comparar chunks-topk-chunk_chars-500_top_k-5 OK     00:00:02
+comparar corpus-expandido-10                 OK     00:00:02
+comparar corpus-expandido-20                 OK     00:00:02
+comparar corpus-expandido-5                  OK     00:00:02
+comparar overlap-chunk_overlap-0             OK     00:00:02
+comparar overlap-chunk_overlap-300           OK     00:00:02
+consolidar                                   OK
+
+
+15 passos, 2 falhas.
+**********************
+Windows PowerShell transcript end
+End time: 20261117150318
+**********************

@@ -1,0 +1,92 @@
+{
+  "version": 2,
+  "mode": "meta3-rag",
+  "settings": {
+    "theme": "Cibersegurança",
+    "models": [
+      "teex/amalia:q4_K_M",
+      "llama3.1:8b"
+    ],
+    "judge_model": "qwen2.5:7b",
+    "embed_model": "bge-m3:latest",
+    "chunk_chars": 900,
+    "chunk_overlap": 150,
+    "top_k": 4,
+    "min_score": null,
+    "store": "chroma",
+    "prompt": "default"
+  },
+  "datasets": {
+    "train": {
+      "path": "C:\\Users\\ivoro\\OneDrive\\Ambiente de Trabalho\\LECD\\3º Ano\\PLN\\data\\dataset_PLN_train.tsv",
+      "sha256": "f23fc48b54a89428841fa094fd7d8a38466006bb7fb2b7a1acc14d25830e904b"
+    },
+    "test": {
+      "path": "C:\\Users\\ivoro\\OneDrive\\Ambiente de Trabalho\\LECD\\3º Ano\\PLN\\data\\dataset_PLN_test.tsv",
+      "sha256": "6c7d7eef314b6910adf820884158ba353a249b291d6d6e0d898415bd7863f1e4"
+    }
+  },
+  "ollama_model_digests": {
+    "bge-m3:latest": "7907646426070047a77226ac3e684fbbe8410524f7b4a74d02837e43f2146bab",
+    "llama3.1:8b": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+    "qwen2.5:7b": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "teex/amalia:q4_K_M": "91184f16bd802eb5d14a0dd11ccc9e3a17ce1c64d29f0f2af5cfec1227afdb04"
+  },
+  "corpus": {
+    "sha256": "6137b4db317f45128c4a7416deec4c6a2309276f85bf56e867746323c7e0a458",
+    "chunks": 1426
+  },
+  "generation": {
+    "system_prompt": "És um assistente que responde a perguntas de cultura geral em português europeu. Recebes excertos de documentos que podem ou não conter a resposta. Se os excertos contiverem a resposta, usa-os; se não a contiverem, responde com o teu conhecimento. Responde apenas com uma resposta curta (no máximo uma frase), sem explicações adicionais e sem mencionar os excertos.",
+    "fallback_prompt": "És um assistente que responde a perguntas de cultura geral em português europeu. Responde apenas com uma resposta curta (no máximo uma frase), sem explicações adicionais.",
+    "temperature": 0,
+    "seed": 42,
+    "max_tokens": 120
+  },
+  "judgement": {
+    "prompt": "Avalia se a resposta candidata está correta face à resposta de referência.\n\nPergunta: {q}\nResposta de referência: {gold}\nResposta candidata: {pred}\n\nConsidera a resposta candidata correta se transmite a mesma informação essencial que a referência\n(ignora diferenças de formulação, nível de detalhe ou formato de datas). Se contradiz a referência,\nomite a informação pedida ou não responde, é incorreta.\nResponde apenas com um objeto JSON válido, sem texto adicional, neste formato:\n{{\"veredito\": \"CORRETO\"}}\nO valor de \"veredito\" tem de ser exatamente \"CORRETO\" ou \"INCORRETO\".",
+    "cache_version": "json-v1"
+  },
+  "metrics": {
+    "bert_model": "PORTULAN/albertina-100m-portuguese-ptpt-encoder",
+    "bert_num_layers": 12,
+    "names": [
+      "EM",
+      "Contains",
+      "ROUGE_L",
+      "BERTScore_F1",
+      "Judge"
+    ]
+  },
+  "versions": {
+    "numpy": "2.5.4",
+    "pandas": "3.1.0",
+    "requests": "2.34.2",
+    "chromadb": "1.5.9",
+    "scipy": "1.18.1",
+    "torch": "2.15.0+cpu",
+    "bert-score": "0.3.13"
+  },
+  "source_sha256": {
+    "config.py": "23d4248ac1ac232a96584e6af9e6884ea9e0f4a51925979e5bb9eb55868ffe9d",
+    "data.py": "822d0ec7ffbf7c0c100c32037899069f792380827e9ae47e35e2e9bdd58f7c9c",
+    "cache.py": "cd1601e86950fb41c68d656c7b02621aa6df03061551acc8d1eba62e36e27e26",
+    "llm.py": "69de183998052fca4f73ba3549e10935f91bd0d1bde1541d12c0565697849321",
+    "prompts.py": "5b58c7b55a43e292321b8daf95cc0809f777805b9f04b88af66831522c64cb5a",
+    "judge.py": "8e1ddc51ec4eb105570866044d5bbeb0232b9eec845ec97ffa5862d68602b866",
+    "scoring.py": "f9e574fa9ff787d9dd96bc671183094bc3161a488939c6cea5882027fe9db4f4",
+    "metrics.py": "9ca59e2d6cfa2008a06da635d26ac928bbf44145a36a9833f594795d99f0f864",
+    "analysis.py": "7de757a7c78a9a13f1b51d0e36db0f039e1082f745c5e893d5d3980e13bcb4da",
+    "stats.py": "64c4124fc6b76ff8183c5fcb5547f2b7b552b38caed319b03e71f85ea8a8a91d",
+    "rag_config.py": "e3b786116d960158c6ccfd2f9c9fde36dcc9c3038ce45acf5f5a4fa9cdd99e85",
+    "rag_corpus.py": "d3d45848b8a33354473321c432a73c957e55e44a98ddecef92480f304c3460c8",
+    "rag_embed.py": "b3fa60fdb11ea17949099c604bbbb75a95724289da4e0d968c61b7b2691dac49",
+    "rag_store.py": "2a24be7a693433ac3869af688b1550f75c196907e47d6d6bac83f3ae9e53d243",
+    "rag_retrieval.py": "03d183b6d3ad628e13d14bf9b5aab3437b138a068263644921732cf771d439f8",
+    "rag_generation.py": "3ab8e73dbe1dc617c20010eee9bd41658c87045e719af0bf652622204e9b431a",
+    "rag_compare.py": "9d5359964d5cd79fc9349e73dc5baebc0a429c87b795f0a5316da89adf93dbfb",
+    "rag_cli.py": "17f947c17376479b17358ee1a879df7d64a055eca45f27a775f3fbc26e94ce70",
+    "rag_prompts.py": "b44757e23746dc0bdfa29bdd865956951df9de51e3a47bbc81adfbee098236e0",
+    "rag_settings.py": "a72b14f90a411b8c8cdbd69a2ad0402ff238e15dad2a75b463f0055940ace46b"
+  }
+}
