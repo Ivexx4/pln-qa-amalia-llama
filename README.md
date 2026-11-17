@@ -157,11 +157,11 @@ ollama pull bge-m3
 python -m pip install -r requirements.txt
 
 # 1. Recolher o corpus (rede). Rever data/rag/<tema>/seeds.txt; o comando avisa dos títulos não encontrados.
-python main.py rag corpus --theme "Futebol"
+python main.py rag corpus --theme "Cibersegurança"
 
 # 2. Ensaio com 2 perguntas e depois a experiência completa do tema (índice, recuperação, geração, juiz, métricas, comparação)
-python main.py rag all --theme "Futebol" --limit 2 --run-id rag-ensaio
-python main.py rag all --theme "Futebol" --run-id rag-v1
+python main.py rag all --theme "Cibersegurança" --limit 2 --run-id rag-ensaio
+python main.py rag all --theme "Cibersegurança" --run-id rag-v1
 ```
 
 As fases podem ser corridas em separado (`index`, `retrieve`, `generate`, `judge`, `score`, `analyze`, `compare`) e são retomáveis. Parâmetros do RAG: ver a secção seguinte; `--baseline` (por omissão, o `all_results.csv` de `principal-ptpt`). Resultados em `results/meta3/<run-id>/`: `recuperacao_por_pergunta.csv` e `recuperacao_resumo.csv` (hit@k, MRR e cobertura de tokens da resposta no contexto), as tabelas habituais da Meta 2 e, na pasta de análise, `comparacao_rag_vs_baseline.csv` (diferença RAG − baseline por modelo e métrica, IC bootstrap, McNemar/Wilcoxon) e `efeito_rag_por_pergunta.csv` (onde o RAG ajudou ou prejudicou, cruzado com a recuperação).

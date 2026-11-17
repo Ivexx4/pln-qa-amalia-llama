@@ -1,6 +1,6 @@
 {
   "name": "prompt-minscore",
-  "base": {"theme": "Futebol", "top_k": 4},
+  "base": {"theme": "Cibersegurança", "top_k": 4},
   "grid": {
     "prompt": ["default", "estrito"],
     "min_score": [null, 0.4, 0.6]

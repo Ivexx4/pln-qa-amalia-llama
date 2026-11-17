@@ -1,0 +1,41 @@
+# Sementes do corpus do tema "Cibersegurança" (Wikipédia em português).
+# Uma por linha: título exato de um artigo, ou "?consulta" para pesquisar (usa os 3 primeiros resultados).
+# Lista inicial: rever depois de 'rag corpus', que avisa quais os títulos não encontrados.
+# Escolhida a partir do tema e das perguntas de TREINO; não usar as perguntas de teste para escolher fontes.
+Segurança informática
+Segurança da informação
+Malware
+Ransomware
+Cavalo de Troia (computação)
+Vírus de computador
+Spyware
+Botnet
+Phishing
+Engenharia social (segurança)
+Firewall
+Sistema de detecção de intrusão
+Negação de serviço
+Ataque de força bruta
+Vulnerabilidade (computação)
+Zero-day
+Exploit
+Criptografia
+Autenticação multifator
+Autenticação
+Controle de acesso
+Infraestrutura de chave pública
+Rede privada virtual
+Segurança de redes
+Hacker
+Teste de intrusão
+CVE
+Confidencialidade, integridade e disponibilidade
+Backup
+Regulamento Geral sobre a Proteção de Dados
+Centro Nacional de Cibersegurança
+?Zero Trust arquitetura de segurança
+?aprendizagem de máquina adversária
+?envenenamento de dados aprendizagem automática
+?ataque de inferência de pertença modelo de aprendizagem automática
+?vetor de ataque segurança informática
+?Segurança da informação CIA tríade

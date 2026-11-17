@@ -1,6 +1,6 @@
 {
   "name": "chunks-topk",
-  "base": {"theme": "Futebol"},
+  "base": {"theme": "Cibersegurança"},
   "grid": {
     "chunk_chars": [500, 900],
     "top_k": [1, 3, 5]
