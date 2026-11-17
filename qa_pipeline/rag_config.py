@@ -7,7 +7,9 @@ META3_RESULTS_DIR = config.RESULTS_DIR / "meta3"
 WIKI_API = "https://pt.wikipedia.org/w/api.php"
 WIKI_USER_AGENT = "PLN-UC-projeto/1.0 (trabalho universitario; contacto via repositorio Ivexx4/pln-qa-amalia-llama)"
 WIKI_SEARCH_RESULTS = 3  # artigos por linha "?consulta" do ficheiro de sementes
-WIKI_PAUSE_SECONDS = 0.5
+WIKI_PAUSE_SECONDS = 1.0
+WIKI_RETRIES = 6  # tentativas extra perante 429/5xx
+WIKI_BACKOFF_SECONDS = 5.0  # espera inicial, duplica a cada tentativa (se não houver Retry-After)
 
 # Secções finais da Wikipédia sem conteúdo informativo.
 DROP_SECTIONS = {"referências", "ligações externas", "ver também", "notas", "bibliografia",

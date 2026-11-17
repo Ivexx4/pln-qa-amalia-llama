@@ -41,9 +41,23 @@ def read_seeds(path: Path) -> list[str]:
     return seeds
 
 
-def _wiki_get(session: requests.Session, params: dict) -> dict:
-    response = session.get(rag_config.WIKI_API, params={**params, "format": "json", "formatversion": 2},
-                           timeout=30)
+def _wiki_get(session: requests.Session, params: dict, retries: int = rag_config.WIKI_RETRIES) -> dict:
+    """GET à API da Wikipédia; perante 429/5xx espera (respeitando 'Retry-After') e repete."""
+    full = {**params, "format": "json", "formatversion": 2}
+    for attempt in range(retries + 1):
+        response = session.get(rag_config.WIKI_API, params=full, timeout=30)
+        if response.status_code == 429 or response.status_code >= 500:
+            if attempt == retries:
+                break
+            retry_after = response.headers.get("Retry-After", "")
+            wait = float(retry_after) if retry_after.isdigit() else rag_config.WIKI_BACKOFF_SECONDS * 2 ** attempt
+            wait = min(wait, 300)
+            print(f"  Wikipédia respondeu {response.status_code}; a esperar {wait:.0f}s "
+                  f"(tentativa {attempt + 1}/{retries})...")
+            time.sleep(wait)
+            continue
+        response.raise_for_status()
+        return response.json()
     response.raise_for_status()
     return response.json()
 
@@ -94,10 +108,17 @@ def build_corpus(theme: str, seeds: list[str], out_dir: Path, pause: float | Non
         titles.extend(found)
         time.sleep(pause)
 
+    cache_dir = out_dir / "_cache"
+    cache_dir.mkdir(parents=True, exist_ok=True)
     docs, seen, missing = [], set(), []
     for title in titles:
-        article = fetch_article(session, title)
-        time.sleep(pause)
+        cached = cache_dir / f"{slugify(title)}.json"
+        if cached.is_file():  # já descarregado numa execução anterior
+            article = json.loads(cached.read_text(encoding="utf-8")) or None
+        else:
+            article = fetch_article(session, title)
+            cached.write_text(json.dumps(article, ensure_ascii=False), encoding="utf-8")
+            time.sleep(pause)
         if article is None:
             missing.append(title)
             continue
