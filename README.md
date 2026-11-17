@@ -148,6 +148,26 @@ A opção `--rag` conserva uma experiência lexical anterior em `results/rag-exp
 
 O relatório apresenta os resultados completos de `principal-ptpt`, com BERTScore calculado usando Albertina a partir das previsões e dos vereditos de `principal`. Os resultados históricos diretamente em `results/` são distintos e não têm proveniência suficiente para confirmar o prompt do juiz.
 
+## Meta 3: RAG com base de dados vetorial
+
+Pipeline em `qa_pipeline/rag_*.py`, independente dos módulos da Meta 2 (que não foram alterados). Corpus: artigos da Wikipédia em português sobre um tema do dataset; embeddings `bge-m3` (Ollama); índice ChromaDB com distância do cosseno; os mesmos LLMs da Meta 2. O dataset **não** é indexado: o corpus só contém documentos externos.
+
+```bash
+ollama pull bge-m3
+python -m pip install -r requirements.txt
+
+# 1. Recolher o corpus (rede). Rever data/rag/<tema>/seeds.txt; o comando avisa dos títulos não encontrados.
+python main.py rag corpus --theme "Futebol"
+
+# 2. Ensaio com 2 perguntas e depois a experiência completa do tema (índice, recuperação, geração, juiz, métricas, comparação)
+python main.py rag all --theme "Futebol" --limit 2 --run-id rag-ensaio
+python main.py rag all --theme "Futebol" --run-id rag-v1
+```
+
+As fases podem ser corridas em separado (`index`, `retrieve`, `generate`, `judge`, `score`, `analyze`, `compare`) e são retomáveis. Parâmetros: `--top-k` (4), `--chunk-chars` (900), `--chunk-overlap` (150), `--embed-model`, `--store chroma|memory`, `--baseline` (por omissão, o `all_results.csv` de `principal-ptpt`). Resultados em `results/meta3/<run-id>/`: `recuperacao_por_pergunta.csv` e `recuperacao_resumo.csv` (hit@k, MRR e cobertura de tokens da resposta no contexto), as tabelas habituais da Meta 2 e, na pasta de análise, `comparacao_rag_vs_baseline.csv` (diferença RAG − baseline por modelo e métrica, IC bootstrap, McNemar/Wilcoxon) e `efeito_rag_por_pergunta.csv` (onde o RAG ajudou ou prejudicou, cruzado com a recuperação).
+
+Limites a ter em conta: `hit@k` e `token_recall` são medidas lexicais (a resposta aparece no excerto), não provam que o excerto é relevante; com 20 perguntas por tema os IC são largos; o corpus e as sementes são escolhidos pelo autor, pelo que as sementes devem basear-se no tema e nas perguntas de treino, nunca nas de teste. A API do `chromadb` e as sementes iniciais não foram executadas contra o serviço real durante o desenvolvimento do código; validar com `--limit 2` antes da execução completa.
+
 ## Uso de ferramentas de assistência
 
 O código, os testes e o relatório foram desenvolvidos com apoio do GitHub Copilot, no IDE, ao longo de muitos pedidos iterativos. A IA foi usada para a estrutura inicial do pipeline e dos módulos e como auxílio na validação dos resultados e dos erros; as decisões finais sobre o que alterar ou manter foram sempre tomadas pelo autor. O registo completo e ordenado dos pedidos não foi arquivado; por isso, não é possível determinar com exatidão todas as decisões individuais nem reproduzir a sequência integral de prompts. As sugestões foram executadas, comparadas com os dados e verificadas pela suite de testes; cada decisão apresentada é da responsabilidade do autor.

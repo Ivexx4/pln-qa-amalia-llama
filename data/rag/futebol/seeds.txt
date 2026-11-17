@@ -1,0 +1,41 @@
+# Sementes do corpus do tema "Futebol" (Wikipédia em português).
+# Uma por linha: título exato de um artigo, ou "?consulta" para pesquisar (usa os 3 primeiros resultados).
+# Lista inicial: rever depois de 'rag corpus', que avisa quais os títulos não encontrados.
+# Escolhida a partir do tema e das perguntas de TREINO; não usar as perguntas de teste para escolher fontes.
+Futebol
+Regras do futebol
+Campo de futebol
+Fora de jogo (futebol)
+Fédération Internationale de Football Association
+União das Federações Europeias de Futebol
+?Campeonato do Mundo de Futebol história vencedores
+?Campeonato do Mundo de Futebol de 2006
+?Campeonato do Mundo de Clubes da FIFA
+?Liga dos Campeões da UEFA vencedores
+?Supertaça Europeia
+?Taça Intertoto da UEFA
+?Campeonato Europeu de Futebol
+?Bola de Ouro futebol vencedores
+Seleção Portuguesa de Futebol
+Primeira Liga
+Taça de Portugal
+Sport Lisboa e Benfica
+Futebol Clube do Porto
+Sporting Clube de Portugal
+Real Madrid Club de Fútbol
+Futbol Club Barcelona
+Valencia Club de Fútbol
+Manchester United Football Club
+Old Trafford
+Estádio da Luz
+Cristiano Ronaldo
+Lionel Messi
+Eusébio
+Pelé
+Diego Maradona
+Zinedine Zidane
+Alex Ferguson
+Luiz Felipe Scolari
+Luis Enrique
+José Mourinho
+Adidas
