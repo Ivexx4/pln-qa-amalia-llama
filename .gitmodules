@@ -1,3 +1,3 @@
 [submodule "rag/wikipedia"]
 	path = rag/wikipedia
-	url = https://github.com/kkuwaran/wiki-RAG.git
+	url = https://github.com/ivexx4/wiki-RAG.git
