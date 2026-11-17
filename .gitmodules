@@ -1,0 +1,3 @@
+[submodule "rag/wikipedia"]
+	path = rag/wikipedia
+	url = https://github.com/kkuwaran/wiki-RAG.git
