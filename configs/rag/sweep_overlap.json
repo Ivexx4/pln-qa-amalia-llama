@@ -1,0 +1,7 @@
+{
+  "name": "overlap",
+  "base": {"theme": "Cibersegurança", "chunk_chars": 900, "top_k": 4},
+  "grid": {
+    "chunk_overlap": [0, 300]
+  }
+}

@@ -1,0 +1,110 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261117035942
+Username: IVO_ROSA\ivoro
+RunAs User: IVO_ROSA\ivoro
+Configuration Name: 
+Machine: IVO_ROSA (Microsoft Windows NT 10.0.26200.0)
+Host Application: powershell.exe -NoExit -ExecutionPolicy Bypass -File C:\Program Files\JetBrains\IntelliJ IDEA OSS\plugins\terminal\shell-integrations\powershell\powershell-integration.ps1
+Process ID: 67880
+PSVersion: 5.1.26100.9818
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9818
+BuildVersion: 10.0.26100.9818
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Corpus inexistente: a recolher as sementes.
+
+=== corpus (sementes) ===
+rag corpus --theme Cibersegurança
+  Wikipédia respondeu 429; a esperar 28s (tentativa 1/6)...
+  Wikipédia respondeu 429; a esperar 46s (tentativa 1/6)...
+  Wikipédia respondeu 429; a esperar 47s (tentativa 1/6)...
+  Wikipédia respondeu 429; a esperar 47s (tentativa 1/6)...
+  Wikipédia respondeu 429; a esperar 41s (tentativa 1/6)...
+Aviso: artigos não encontrados (corrigir o ficheiro de sementes): Zero-day; Infraestrutura de chave pú
+blica; CVE; Confidencialidade, integridade e disponibilidade; Centro Nacional de Cibersegurança
+39 documentos guardados em C:\Users\ivoro\OneDrive\Ambiente de Trabalho\LECD\3º Ano\PLN\data\rag\ciber
+seguranca
+-> OK em 05:19 (código 0)
+MODO ENSAIO: 2 perguntas, saída em results\ensaio (não polui results\meta3).
+
+=== sweep_chunks_topk ===
+rag sweep --theme Cibersegurança --sweep configs\rag\sweep_chunks_topk.json --limit 2 --output-dir results\ensaio
+    raise ModuleNotFoundError(
+    ...<2 lines>...
+    ) from exc
+ModuleNotFoundError: chromadb é necessário para a base de dados vetorial; instalar com 'python -m pip
+install -r requirements.txt' ou usar --store memory.
+-> FALHOU em 00:04 (código 1)
+
+=== sweep_prompt_minscore ===
+rag sweep --theme Cibersegurança --sweep configs\rag\sweep_prompt_minscore.json --limit 2 --output-dir results\ensaio
+
+-> FALHOU em 00:03 (código 1)
+
+=== sweep_overlap ===
+rag sweep --theme Cibersegurança --sweep configs\rag\sweep_overlap.json --limit 2 --output-dir results\ensaio
+
+-> FALHOU em 00:02 (código 1)
+
+=== corpus expandido (max-links 5) ===
+rag corpus --theme Cibersegurança --expand-links --max-links 5 --min-links 2
+
+-> OK em 04:51 (código 0)
+
+=== all corpus-expandido-5 ===
+rag all --theme Cibersegurança --run-id corpus-expandido-5 --limit 2 --output-dir results\ensaio
+
+-> FALHOU em 00:03 (código 1)
+
+=== corpus expandido (max-links 10) ===
+rag corpus --theme Cibersegurança --expand-links --max-links 10 --min-links 2
+
+-> OK em 00:56 (código 0)
+
+=== all corpus-expandido-10 ===
+rag all --theme Cibersegurança --run-id corpus-expandido-10 --limit 2 --output-dir results\ensaio
+
+-> FALHOU em 00:02 (código 1)
+
+=== corpus expandido (max-links 20) ===
+rag corpus --theme Cibersegurança --expand-links --max-links 20 --min-links 2
+
+-> OK em 01:05 (código 0)
+
+=== all corpus-expandido-20 ===
+rag all --theme Cibersegurança --run-id corpus-expandido-20 --limit 2 --output-dir results\ensaio
+
+-> FALHOU em 00:03 (código 1)
+Corpus das sementes reposto.
+
+=== consolidar ===
+
+
+================ RESUMO (00:12:35) ================
+
+Passo                           Estado Duracao
+-----                           ------ -------
+corpus (sementes)               OK     00:05:19
+sweep_chunks_topk               FALHOU 00:00:04
+sweep_prompt_minscore           FALHOU 00:00:03
+sweep_overlap                   FALHOU 00:00:02
+corpus expandido (max-links 5)  OK     00:04:51
+all corpus-expandido-5          FALHOU 00:00:03
+corpus expandido (max-links 10) OK     00:00:56
+all corpus-expandido-10         FALHOU 00:00:02
+corpus expandido (max-links 20) OK     00:01:05
+all corpus-expandido-20         FALHOU 00:00:03
+consolidar                      FALHOU
+
+
+11 passos, 7 falhas.
+Multiplique a duração média de uma execução 'all' por 17 (14 dos varrimentos + 3 de corpus) para estimar o plano completo.
+**********************
+Windows PowerShell transcript end
+End time: 20261117041217
+**********************

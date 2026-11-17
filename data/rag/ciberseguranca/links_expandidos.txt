@@ -1,0 +1,22 @@
+# Artigos acrescentados por --expand-links (título <TAB> nº de sementes que ligam para ele).
+# Para os fixar, copiar os títulos para seeds.txt.
+Digital object identifier	19
+International Standard Book Number	18
+International Standard Serial Number	14
+Rede de computadores	13
+Internet	12
+Software	11
+Worm	11
+Antivírus	10
+Crime informático	10
+Gemeinsame Normdatei	10
+Adware	9
+Aprendizado de máquina	9
+Ataque man-in-the-middle	9
+Backdoor	9
+Número de controle da Biblioteca do Congresso	9
+PubMed	9
+Rootkit	9
+ArXiv	8
+Bibcode	8
+Computador zumbi	8

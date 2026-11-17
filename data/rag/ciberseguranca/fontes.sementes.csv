@@ -1,0 +1,40 @@
+doc_id,titulo,url,revisao,recolhido_em,caracteres,origem
+d000,Segurança da informação,https://pt.wikipedia.org/wiki/Seguran%C3%A7a_da_informa%C3%A7%C3%A3o,73403072,2026-11-17,20394,semente
+d001,Malware,https://pt.wikipedia.org/wiki/Malware,73476657,2026-11-17,35272,semente
+d002,Ransomware,https://pt.wikipedia.org/wiki/Ransomware,72995715,2026-11-17,18092,semente
+d003,Cavalo de Troia (computação),https://pt.wikipedia.org/wiki/Cavalo_de_Troia_(computa%C3%A7%C3%A3o),72122741,2026-11-17,7527,semente
+d004,Vírus de computador,https://pt.wikipedia.org/wiki/V%C3%ADrus_de_computador,71168529,2026-11-17,22210,semente
+d005,Spyware,https://pt.wikipedia.org/wiki/Spyware,72392761,2026-11-17,15880,semente
+d006,Botnet,https://pt.wikipedia.org/wiki/Botnet,70810584,2026-11-17,7698,semente
+d007,Phishing,https://pt.wikipedia.org/wiki/Phishing,71169200,2026-11-17,28411,semente
+d008,Engenharia social (segurança),https://pt.wikipedia.org/wiki/Engenharia_social_(seguran%C3%A7a),73270117,2026-11-17,8330,semente
+d009,Firewall,https://pt.wikipedia.org/wiki/Firewall,71604138,2026-11-17,14221,semente
+d010,Sistema de detecção de intrusos,https://pt.wikipedia.org/wiki/Sistema_de_detec%C3%A7%C3%A3o_de_intrusos,70238170,2026-11-17,7006,semente
+d011,Ataque de negação de serviço,https://pt.wikipedia.org/wiki/Ataque_de_nega%C3%A7%C3%A3o_de_servi%C3%A7o,70286126,2026-11-17,5779,semente
+d012,Ataque de força bruta,https://pt.wikipedia.org/wiki/Ataque_de_for%C3%A7a_bruta,72207683,2026-11-17,9905,semente
+d013,Vulnerabilidade (computação),https://pt.wikipedia.org/wiki/Vulnerabilidade_(computa%C3%A7%C3%A3o),73354371,2026-11-17,8629,semente
+d014,Exploit (segurança de computadores),https://pt.wikipedia.org/wiki/Exploit_(seguran%C3%A7a_de_computadores),72931043,2026-11-17,5333,semente
+d015,Criptografia,https://pt.wikipedia.org/wiki/Criptografia,73026189,2026-11-17,56555,semente
+d016,Autenticação de dois fatores,https://pt.wikipedia.org/wiki/Autentica%C3%A7%C3%A3o_de_dois_fatores,72421834,2026-11-17,1387,semente
+d017,Autenticação,https://pt.wikipedia.org/wiki/Autentica%C3%A7%C3%A3o,72115593,2026-11-17,8489,semente
+d018,Controle de acesso,https://pt.wikipedia.org/wiki/Controle_de_acesso,69767756,2026-11-17,3781,semente
+d019,Rede privada virtual,https://pt.wikipedia.org/wiki/Rede_privada_virtual,68891718,2026-11-17,8269,semente
+d020,Segurança de rede,https://pt.wikipedia.org/wiki/Seguran%C3%A7a_de_rede,69870242,2026-11-17,4209,semente
+d021,Hacker,https://pt.wikipedia.org/wiki/Hacker,72729609,2026-11-17,17810,semente
+d022,Teste de intrusão,https://pt.wikipedia.org/wiki/Teste_de_intrus%C3%A3o,70776526,2026-11-17,6089,semente
+d023,Cópia de segurança,https://pt.wikipedia.org/wiki/C%C3%B3pia_de_seguran%C3%A7a,71488241,2026-11-17,6969,semente
+d024,Regulamento Geral sobre a Proteção de Dados,https://pt.wikipedia.org/wiki/Regulamento_Geral_sobre_a_Prote%C3%A7%C3%A3o_de_Dados,73104761,2026-11-17,3392,semente
+d025,Arquitetura de confiança zero,https://pt.wikipedia.org/wiki/Arquitetura_de_confian%C3%A7a_zero,73235405,2026-11-17,8507,semente
+d026,Engenharia de cibersegurança,https://pt.wikipedia.org/wiki/Engenharia_de_ciberseguran%C3%A7a,73467808,2026-11-17,13364,semente
+d027,Modelo de segurança de confiança zero,https://pt.wikipedia.org/wiki/Modelo_de_seguran%C3%A7a_de_confian%C3%A7a_zero,66590217,2026-11-17,2178,semente
+d028,Aprendizado de máquina adversário,https://pt.wikipedia.org/wiki/Aprendizado_de_m%C3%A1quina_advers%C3%A1rio,73467754,2026-11-17,11329,semente
+d029,Aprendizagem por reforço,https://pt.wikipedia.org/wiki/Aprendizagem_por_refor%C3%A7o,73467763,2026-11-17,31168,semente
+d030,Inteligência artificial generativa,https://pt.wikipedia.org/wiki/Intelig%C3%AAncia_artificial_generativa,73297388,2026-11-17,39159,semente
+d031,Aprendizagem profunda,https://pt.wikipedia.org/wiki/Aprendizagem_profunda,73467766,2026-11-17,64937,semente
+d032,Inteligência artificial explicável,https://pt.wikipedia.org/wiki/Intelig%C3%AAncia_artificial_explic%C3%A1vel,73408590,2026-11-17,12899,semente
+d033,Model Context Protocol,https://pt.wikipedia.org/wiki/Model_Context_Protocol,72138446,2026-11-17,19081,semente
+d034,Albert K. Cohen,https://pt.wikipedia.org/wiki/Albert_K._Cohen,67972817,2026-11-17,122084,semente
+d035,Segurança computacional,https://pt.wikipedia.org/wiki/Seguran%C3%A7a_computacional,73403078,2026-11-17,71180,semente
+d036,Incidente OpenAI–Hugging Face,https://pt.wikipedia.org/wiki/Incidente_OpenAI%E2%80%93Hugging_Face,73256434,2026-11-17,25531,semente
+d037,Equipe vermelha,https://pt.wikipedia.org/wiki/Equipe_vermelha,71959171,2026-11-17,5535,semente
+d038,Disponibilidade de registros eletrônicos de saúde,https://pt.wikipedia.org/wiki/Disponibilidade_de_registros_eletr%C3%B4nicos_de_sa%C3%BAde,73305318,2026-11-17,16980,semente
